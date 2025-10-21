@@ -851,10 +851,10 @@ def sync_templates(prox, stand, nodes):
                     if candidate_vmid:
                         try:
                             vms_on_node = prox.nodes(node).qemu.get()
-                            template_present = any(vm['vmid'] == candidate_vmid and vm.get('template') == 1 for vm in vms_on_node)
+                            template_present = any(vm['vmid'] == int(candidate_vmid) and vm.get('template') == 1 for vm in vms_on_node)
                             if template_present:
                                 continue  # Actually exists, skip
-                        except Exception:
+                        except (Exception, ValueError):
                             pass
                 # If replica not found or error, remove invalid entry and proceed to create new
                 for machine in machines:
@@ -864,7 +864,7 @@ def sync_templates(prox, stand, nodes):
             # Create full clone on original node once per template_vmid per node
             clone_vmid = prox.cluster.nextid.get()
             # Use template_vmid in name for uniqueness, keep simple no special chars
-            safe_name = f"tpl{node[:5]}{template_vmid}"
+            safe_name = f"tpl-{original_node}-{template_vmid}"
             clone_task_id = prox.nodes(original_node).qemu(template_vmid).clone.post(
                 newid=clone_vmid,
                 name=safe_name,
@@ -915,7 +915,7 @@ def reload_network(proxmox, node):
     except Exception as e:
         logger.error(f"Ошибка перезагрузки сети на ноде {node}: {e}")
 
-def deploy_stand_local(stand_config=None, users_list=None, target_node=None, update_stand_file=True):
+def deploy_stand_local(stand_config=None, users_list=None, target_node=None, update_stand_file=True, clone_type=None):
     """Deploy stand locally - main implementation."""
     import random
     import string
@@ -932,6 +932,15 @@ def deploy_stand_local(stand_config=None, users_list=None, target_node=None, upd
         except Exception as e:
             print(f"Ошибка получения следующего VMID: {e}")
             return None
+
+    def select_clone_type():
+        """Select clone type."""
+        print("Выберите тип клонирования:")
+        print("1. Полное клонирование (full)")
+        print("2. Связанное клонирование (linked)")
+
+        choice = input("Выбор: ").strip()
+        return 1 if choice == '1' else 0
 
     # Use provided configs if available, otherwise select interactively
     if stand_config is None:
@@ -963,6 +972,8 @@ def deploy_stand_local(stand_config=None, users_list=None, target_node=None, upd
                 pass
             return None
         stand = select_stand_config()
+        if clone_type is None:
+            clone_type = select_clone_type()
     else:
         stand = stand_config
 
@@ -998,15 +1009,6 @@ def deploy_stand_local(stand_config=None, users_list=None, target_node=None, upd
         users = select_user_list()
     else:
         users = users_list
-
-    def select_clone_type():
-        """Select clone type."""
-        print("Выберите тип клонирования:")
-        print("1. Полное клонирование (full)")
-        print("2. Связанное клонирование (linked)")
-
-        choice = input("Выбор: ").strip()
-        return 1 if choice == '1' else 0
 
     def get_next_bridge_number(proxmox, node):
         """Найти следующий свободный номер bridge"""
@@ -1230,7 +1232,7 @@ def deploy_stand_local(stand_config=None, users_list=None, target_node=None, upd
         console.print("[red]Не выбран список пользователей.[/red]")
         return []
 
-    clone_type = 1  # Default to full clone, or could pass as param
+    # clone_type is now selected or passed as param
 
     # Get connection config
     config_file = CONFIG_DIR / 'proxmox_config.yaml'
@@ -1351,6 +1353,21 @@ def deploy_stand_local(stand_config=None, users_list=None, target_node=None, upd
     # Reload network
     reload_network(prox, node)
 
+    if stand_config is None:
+        console.print("\n[bold green]Результаты развертывания:[/bold green]")
+        if deployment_results:
+            from rich.table import Table
+            table = Table(title="Развернутые стенды", show_header=True, header_style="bold magenta")
+            table.add_column("Пользователь", style="cyan", justify="center", no_wrap=True)
+            table.add_column("Пароль", style="green", justify="center", no_wrap=True)
+            table.add_column("Нода", style="yellow", justify="center", no_wrap=True)
+            for result in deployment_results:
+                table.add_row(result['user'], result['password'], result['node'])
+            console.print(table)
+        else:
+            console.print("[red]Нет результатов развертывания.[/red]")
+        input("Нажмите Enter для продолжения...")
+
     return deployment_results
 
 def deploy_stand_distributed():
@@ -1358,6 +1375,15 @@ def deploy_stand_distributed():
     import glob
     import random
     import string
+
+    def select_clone_type():
+        """Select clone type."""
+        print("Выберите тип клонирования:")
+        print("1. Полное клонирование (full)")
+        print("2. Связанное клонирование (linked)")
+
+        choice = input("Выбор: ").strip()
+        return 1 if choice == '1' else 0
 
     def select_stand_config():
         """Select stand configuration file."""
@@ -1423,6 +1449,8 @@ def deploy_stand_distributed():
     if not users:
         input("Нажмите Enter для продолжения...")
         return
+
+    clone_type = select_clone_type()
 
     # Get connection config
     config_file = CONFIG_DIR / 'proxmox_config.yaml'
@@ -1506,16 +1534,25 @@ def deploy_stand_distributed():
             stand_config=stand,
             users_list=[user],
             target_node=target_node,
-            update_stand_file=False
+            update_stand_file=False,
+            clone_type=clone_type
         )
         all_deployment_results.extend(user_results)
 
     console.print("[green]Распределенное развертывание завершено![/green]")
-    print("\nОбщие результаты развертывания:")
-    print("Распределение пользователей по нодам:")
-    for result in all_deployment_results:
-        print(f"Пользователь: {result['user']}, Пароль: {result['password']}, Нода: {result['node']}")
 
+    console.print("\n[bold green]Общие результаты развертывания:[/bold green]")
+    if all_deployment_results:
+        from rich.table import Table
+        table = Table(title="Распределение пользователей по нодам", show_header=True, header_style="bold magenta")
+        table.add_column("Пользователь", style="cyan", justify="center", no_wrap=True)
+        table.add_column("Пароль", style="green", justify="center", no_wrap=True)
+        table.add_column("Нода", style="yellow", justify="center", no_wrap=True)
+        for result in all_deployment_results:
+            table.add_row(result['user'], result['password'], result['node'])
+        console.print(table)
+    else:
+        console.print("[red]Нет результатов развертывания.[/red]")
     input("Нажмите Enter для продолжения...")
 
 def deploy_stand_menu():
