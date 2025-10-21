@@ -1,0 +1,32 @@
+machines:
+- device_type: ecorouter
+  name: gw
+  networks:
+  - bridge: '**vmbr0'
+    comment: '# mngmnt port'
+  - bridge: '**vmbr0**'
+  - bridge: hq
+  - bridge: br
+  replicas:
+    srv2: '103'
+    srv3: '104'
+  template_node: srv1
+  template_vmid: 100
+- device_type: linux
+  name: hq
+  networks:
+  - bridge: hq.100
+  replicas:
+    srv2: '103'
+    srv3: '104'
+  template_node: srv1
+  template_vmid: 100
+- device_type: linux
+  name: br
+  networks:
+  - bridge: br
+  replicas:
+    srv2: '103'
+    srv3: '104'
+  template_node: srv1
+  template_vmid: 100
