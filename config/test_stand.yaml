@@ -1,0 +1,20 @@
+machines:
+- device_type: linux
+  name: gw
+  networks:
+  - bridge: '**vmbr0**'
+  - bridge: hq
+  replicas:
+    srv2: '102'
+    srv3: '101'
+  template_node: srv1
+  template_vmid: 100
+- device_type: linux
+  name: hq
+  networks:
+  - bridge: hq.100
+  replicas:
+    srv2: '102'
+    srv3: '101'
+  template_node: srv1
+  template_vmid: 100
