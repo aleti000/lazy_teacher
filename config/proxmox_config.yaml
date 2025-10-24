@@ -1,0 +1,6 @@
+test:
+  host: 192.168.122.201
+  login: root@pam
+  password: toor
+  port: '8006'
+  token: ''
