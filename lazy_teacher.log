@@ -7558,3 +7558,8 @@ EOFError: EOF when reading a line
 2025-10-24 19:53:07,455 - lazy_teacher.modules.deletion - DEBUG - delete_all_user_stands:350 - Final network reload completed on pve1
 2025-10-24 19:53:07,456 - lazy_teacher.modules.deletion - INFO - log_operation:88 - Bulk stand deletion completed - SUCCESS [total_users=3, deleted_count=3, failed_count=0]
 2025-10-24 19:53:11,925 - lazy_teacher.modules.deletion - DEBUG - __exit__:126 - Completed: Delete all user stands (duration: 31.73s)
+2025-10-24 20:16:07,316 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Select default connection
+2025-10-24 20:16:07,318 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Create connection
+2025-10-24 20:22:04,383 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Create connection (duration: 357.07s)
+2025-10-24 20:22:04,383 - lazy_teacher.modules.connections - ERROR - select_default_connection:258 - No connections available - operation: Select default connection
+2025-10-24 20:22:04,384 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Select default connection (duration: 357.07s)
