@@ -6584,3 +6584,977 @@ EOFError: EOF when reading a line
 2025-10-24 19:17:09,840 - lazy_teacher.modules.deletion - DEBUG - delete_all_user_stands:350 - Final network reload completed on pve2
 2025-10-24 19:17:09,840 - lazy_teacher.modules.deletion - INFO - log_operation:88 - Bulk stand deletion completed - SUCCESS [total_users=3, deleted_count=3, failed_count=0]
 2025-10-24 19:17:14,304 - lazy_teacher.modules.deletion - DEBUG - __exit__:126 - Completed: Delete all user stands (duration: 30.98s)
+2025-10-24 19:31:35,763 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Select default connection
+2025-10-24 19:31:35,763 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:31:35,765 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Test connection test
+2025-10-24 19:31:35,804 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:31:35,920 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 798
+2025-10-24 19:31:35,922 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:31:35,934 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/resources HTTP/1.1" 200 638
+2025-10-24 19:31:35,934 - lazy_teacher.modules.connections - INFO - test_connection:103 - Connection test successful - conn: test, host: 192.168.122.201
+2025-10-24 19:31:35,935 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Test connection test (duration: 0.17s)
+2025-10-24 19:31:35,937 - lazy_teacher.modules.connections - ERROR - __exit__:124 - Failed: Select default connection (duration: 0.17s)
+Traceback (most recent call last):
+  File "/data/git/lazy_teacher/modules/connections.py", line 291, in select_default_connection
+    choice = int(input("Выберите номер подключения: ")) - 1
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+EOFError: EOF when reading a line
+2025-10-24 19:35:08,944 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Select default connection
+2025-10-24 19:35:08,945 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:35:08,947 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Test connection test
+2025-10-24 19:35:08,984 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:35:09,094 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 806
+2025-10-24 19:35:09,096 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:35:09,107 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/resources HTTP/1.1" 200 645
+2025-10-24 19:35:09,107 - lazy_teacher.modules.connections - INFO - test_connection:103 - Connection test successful - conn: test, host: 192.168.122.201
+2025-10-24 19:35:09,108 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Test connection test (duration: 0.16s)
+2025-10-24 19:35:10,731 - lazy_teacher.modules.connections - INFO - select_default_connection:295 - Default connection selected - conn: test
+2025-10-24 19:35:10,732 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Select default connection (duration: 1.79s)
+2025-10-24 19:35:14,451 - lazy_teacher.modules.deploy_stand_local - DEBUG - __enter__:118 - Started: Full local stand deployment
+2025-10-24 19:35:14,451 - lazy_teacher.modules.ui_menus - DEBUG - __enter__:118 - Started: Select from config/*_stand.yaml
+2025-10-24 19:35:15,300 - lazy_teacher.modules.ui_menus - INFO - select_from_config_files:121 - Selected _stand: test (file: config/test_stand.yaml)
+2025-10-24 19:35:15,301 - lazy_teacher.modules.ui_menus - DEBUG - __exit__:126 - Completed: Select from config/*_stand.yaml (duration: 0.85s)
+2025-10-24 19:35:15,301 - lazy_teacher.modules.ui_menus - DEBUG - __enter__:118 - Started: Select clone type
+2025-10-24 19:35:16,322 - lazy_teacher.modules.ui_menus - INFO - select_clone_type:379 - Selected clone type: linked
+2025-10-24 19:35:16,323 - lazy_teacher.modules.ui_menus - DEBUG - __exit__:126 - Completed: Select clone type (duration: 1.02s)
+2025-10-24 19:35:16,323 - lazy_teacher.modules.ui_menus - DEBUG - __enter__:118 - Started: Select from config/*_list.yaml
+2025-10-24 19:35:17,187 - lazy_teacher.modules.ui_menus - INFO - select_from_config_files:121 - Selected _list: test (file: config/test_list.yaml)
+2025-10-24 19:35:17,188 - lazy_teacher.modules.ui_menus - DEBUG - __exit__:126 - Completed: Select from config/*_list.yaml (duration: 0.86s)
+2025-10-24 19:35:17,188 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:35:17,188 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Get Proxmox connection test
+2025-10-24 19:35:17,189 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:35:17,299 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 795
+2025-10-24 19:35:17,301 - lazy_teacher.modules.connections - INFO - get_proxmox_connection:341 - Proxmox connection established - conn: test, host: 192.168.122.201
+2025-10-24 19:35:17,301 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Get Proxmox connection test (duration: 0.11s)
+2025-10-24 19:35:17,302 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:35:17,313 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes HTTP/1.1" 200 968
+2025-10-24 19:35:17,315 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:35:17,315 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Get Proxmox connection test
+2025-10-24 19:35:17,316 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:35:17,429 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 800
+2025-10-24 19:35:17,431 - lazy_teacher.modules.connections - INFO - get_proxmox_connection:341 - Proxmox connection established - conn: test, host: 192.168.122.201
+2025-10-24 19:35:17,431 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Get Proxmox connection test (duration: 0.12s)
+2025-10-24 19:35:17,431 - lazy_teacher.modules.deploy_stand_local - INFO - deploy_stand_local:471 - Successfully connected to Proxmox
+2025-10-24 19:35:17,432 - lazy_teacher.modules.deploy_stand_local - INFO - deploy_stand_local:478 - Creating bridge infrastructure for stand deployment
+2025-10-24 19:35:17,433 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:35:17,466 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/network HTTP/1.1" 200 450
+2025-10-24 19:35:17,482 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve1/network HTTP/1.1" 200 13
+2025-10-24 19:35:17,484 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:17,514 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve1/network/vmbr1000 HTTP/1.1" 200 13
+2025-10-24 19:35:17,515 - lazy_teacher.modules.deploy_stand_local - DEBUG - _create_physical_bridge:154 - Enabled VLAN awareness for bridge vmbr1000
+2025-10-24 19:35:17,515 - lazy_teacher.modules.deploy_stand_local - INFO - _create_physical_bridge:159 - Created bridge vmbr1000 on node pve1
+2025-10-24 19:35:17,516 - lazy_teacher.modules.deploy_stand_local - INFO - deploy_stand_local:490 - Starting deployment for 3 users on node pve1
+2025-10-24 19:35:17,517 - lazy_teacher.modules.deploy_stand_local - INFO - deploy_stand_local:494 - Deploying stand 1/3 for user user1
+2025-10-24 19:35:17,519 - lazy_teacher.modules.deploy_stand_local - DEBUG - __enter__:118 - Started: Deploy stand for user user1@pve
+2025-10-24 19:35:17,520 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:17,540 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/users HTTP/1.1" 200 13
+2025-10-24 19:35:17,541 - lazy_teacher.modules.deploy_stand_local - INFO - _create_user:173 - Created user user1@pve
+2025-10-24 19:35:17,542 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:17,558 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/pools HTTP/1.1" 200 13
+2025-10-24 19:35:17,558 - lazy_teacher.modules.deploy_stand_local - INFO - _create_pool:187 - Created pool user1
+2025-10-24 19:35:17,559 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:17,576 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/access/acl HTTP/1.1" 200 13
+2025-10-24 19:35:17,577 - lazy_teacher.modules.deploy_stand_local - DEBUG - _assign_pool_permissions:205 - Assigned permissions for pool user1 to user user1@pve
+2025-10-24 19:35:17,578 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:17,589 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/nextid HTTP/1.1" 200 14
+2025-10-24 19:35:17,606 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve1/qemu/100/clone HTTP/1.1" 200 69
+2025-10-24 19:35:17,607 - lazy_teacher.modules.deploy_stand_local - INFO - _clone_vm:221 - Started cloning VM gw (VMID 101) from template 100
+2025-10-24 19:35:17,608 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for clone task UPID:pve1:0000681C:000CB7B7:68FB8EA5:qmclone:100:root@pam:
+2025-10-24 19:35:17,609 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:17,624 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:0000681C:000CB7B7:68FB8EA5:qmclone:100:root@pam:/status HTTP/1.1" 200 208
+2025-10-24 19:35:19,625 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:19,640 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:0000681C:000CB7B7:68FB8EA5:qmclone:100:root@pam:/status HTTP/1.1" 200 226
+2025-10-24 19:35:19,641 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Clone task completed successfully
+2025-10-24 19:35:19,642 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for clone task UPID:pve1:0000681C:000CB7B7:68FB8EA5:qmclone:100:root@pam: (duration: 2.03s)
+2025-10-24 19:35:19,642 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:19,656 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve1/qemu/101/config HTTP/1.1" 400 171
+2025-10-24 19:35:19,657 - lazy_teacher.modules.deploy_stand_local - ERROR - log_error:105 - Configure network for VM 101 failed: 400 Bad Request: Parameter verification failed. - {'net0': "invalid format - format error\nnet0.bridge: invalid format - invalid bridge ID 'vmbr0**'\n\n"}
+Traceback (most recent call last):
+  File "/data/git/lazy_teacher/modules/deploy_stand_local.py", line 292, in _configure_vm_network
+    proxmox.nodes(node).qemu(vmid).config.put(**{net_key: net_config})
+  File "/home/user/.local/lib/python3/site-packages/proxmoxer/core.py", line 175, in put
+    return self(args)._request("PUT", data=data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/lib/python3/site-packages/proxmoxer/core.py", line 149, in _request
+    raise ResourceException(
+proxmoxer.core.ResourceException: 400 Bad Request: Parameter verification failed. - {'net0': "invalid format - format error\nnet0.bridge: invalid format - invalid bridge ID 'vmbr0**'\n\n"}
+2025-10-24 19:35:19,660 - lazy_teacher.modules.deploy_stand_local - ERROR - _deploy_user_stand:354 - Failed to configure network for VM 101
+2025-10-24 19:35:19,661 - lazy_teacher.modules.deploy_stand_local - ERROR - _deploy_user_stand:365 - No VMs were deployed for user user1@pve
+2025-10-24 19:35:19,661 - lazy_teacher.modules.deploy_stand_local - DEBUG - __exit__:126 - Completed: Deploy stand for user user1@pve (duration: 2.14s)
+2025-10-24 19:35:19,662 - lazy_teacher.modules.deploy_stand_local - ERROR - deploy_stand_local:509 - Failed to deploy stand for user user1
+2025-10-24 19:35:19,663 - lazy_teacher.modules.deploy_stand_local - INFO - deploy_stand_local:494 - Deploying stand 2/3 for user user2
+2025-10-24 19:35:19,663 - lazy_teacher.modules.deploy_stand_local - DEBUG - __enter__:118 - Started: Deploy stand for user user2@pve
+2025-10-24 19:35:19,664 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:19,685 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/users HTTP/1.1" 200 13
+2025-10-24 19:35:19,686 - lazy_teacher.modules.deploy_stand_local - INFO - _create_user:173 - Created user user2@pve
+2025-10-24 19:35:19,687 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:19,703 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/pools HTTP/1.1" 200 13
+2025-10-24 19:35:19,704 - lazy_teacher.modules.deploy_stand_local - INFO - _create_pool:187 - Created pool user2
+2025-10-24 19:35:19,705 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:19,722 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/access/acl HTTP/1.1" 200 13
+2025-10-24 19:35:19,723 - lazy_teacher.modules.deploy_stand_local - DEBUG - _assign_pool_permissions:205 - Assigned permissions for pool user2 to user user2@pve
+2025-10-24 19:35:19,724 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:19,734 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/nextid HTTP/1.1" 200 14
+2025-10-24 19:35:19,752 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve1/qemu/100/clone HTTP/1.1" 200 69
+2025-10-24 19:35:19,753 - lazy_teacher.modules.deploy_stand_local - INFO - _clone_vm:221 - Started cloning VM gw (VMID 102) from template 100
+2025-10-24 19:35:19,754 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for clone task UPID:pve1:00006836:000CB88D:68FB8EA7:qmclone:100:root@pam:
+2025-10-24 19:35:19,755 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:19,771 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006836:000CB88D:68FB8EA7:qmclone:100:root@pam:/status HTTP/1.1" 200 208
+2025-10-24 19:35:21,773 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:21,790 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006836:000CB88D:68FB8EA7:qmclone:100:root@pam:/status HTTP/1.1" 200 226
+2025-10-24 19:35:21,791 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Clone task completed successfully
+2025-10-24 19:35:21,792 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for clone task UPID:pve1:00006836:000CB88D:68FB8EA7:qmclone:100:root@pam: (duration: 2.04s)
+2025-10-24 19:35:21,793 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:21,811 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve1/qemu/102/config HTTP/1.1" 400 171
+2025-10-24 19:35:21,812 - lazy_teacher.modules.deploy_stand_local - ERROR - log_error:105 - Configure network for VM 102 failed: 400 Bad Request: Parameter verification failed. - {'net0': "invalid format - format error\nnet0.bridge: invalid format - invalid bridge ID 'vmbr0**'\n\n"}
+Traceback (most recent call last):
+  File "/data/git/lazy_teacher/modules/deploy_stand_local.py", line 292, in _configure_vm_network
+    proxmox.nodes(node).qemu(vmid).config.put(**{net_key: net_config})
+  File "/home/user/.local/lib/python3/site-packages/proxmoxer/core.py", line 175, in put
+    return self(args)._request("PUT", data=data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/lib/python3/site-packages/proxmoxer/core.py", line 149, in _request
+    raise ResourceException(
+proxmoxer.core.ResourceException: 400 Bad Request: Parameter verification failed. - {'net0': "invalid format - format error\nnet0.bridge: invalid format - invalid bridge ID 'vmbr0**'\n\n"}
+2025-10-24 19:35:21,814 - lazy_teacher.modules.deploy_stand_local - ERROR - _deploy_user_stand:354 - Failed to configure network for VM 102
+2025-10-24 19:35:21,814 - lazy_teacher.modules.deploy_stand_local - ERROR - _deploy_user_stand:365 - No VMs were deployed for user user2@pve
+2025-10-24 19:35:21,815 - lazy_teacher.modules.deploy_stand_local - DEBUG - __exit__:126 - Completed: Deploy stand for user user2@pve (duration: 2.15s)
+2025-10-24 19:35:21,815 - lazy_teacher.modules.deploy_stand_local - ERROR - deploy_stand_local:509 - Failed to deploy stand for user user2
+2025-10-24 19:35:21,816 - lazy_teacher.modules.deploy_stand_local - INFO - deploy_stand_local:494 - Deploying stand 3/3 for user user3
+2025-10-24 19:35:21,817 - lazy_teacher.modules.deploy_stand_local - DEBUG - __enter__:118 - Started: Deploy stand for user user3@pve
+2025-10-24 19:35:21,818 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:21,853 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/users HTTP/1.1" 200 13
+2025-10-24 19:35:21,854 - lazy_teacher.modules.deploy_stand_local - INFO - _create_user:173 - Created user user3@pve
+2025-10-24 19:35:21,856 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:21,878 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/pools HTTP/1.1" 200 13
+2025-10-24 19:35:21,881 - lazy_teacher.modules.deploy_stand_local - INFO - _create_pool:187 - Created pool user3
+2025-10-24 19:35:21,883 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:21,902 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/access/acl HTTP/1.1" 200 13
+2025-10-24 19:35:21,903 - lazy_teacher.modules.deploy_stand_local - DEBUG - _assign_pool_permissions:205 - Assigned permissions for pool user3 to user user3@pve
+2025-10-24 19:35:21,903 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:21,914 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/nextid HTTP/1.1" 200 14
+2025-10-24 19:35:21,934 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve1/qemu/100/clone HTTP/1.1" 200 69
+2025-10-24 19:35:21,936 - lazy_teacher.modules.deploy_stand_local - INFO - _clone_vm:221 - Started cloning VM gw (VMID 103) from template 100
+2025-10-24 19:35:21,936 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for clone task UPID:pve1:00006865:000CB968:68FB8EA9:qmclone:100:root@pam:
+2025-10-24 19:35:21,937 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:21,950 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006865:000CB968:68FB8EA9:qmclone:100:root@pam:/status HTTP/1.1" 200 208
+2025-10-24 19:35:23,952 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:23,964 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006865:000CB968:68FB8EA9:qmclone:100:root@pam:/status HTTP/1.1" 200 226
+2025-10-24 19:35:23,965 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Clone task completed successfully
+2025-10-24 19:35:23,965 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for clone task UPID:pve1:00006865:000CB968:68FB8EA9:qmclone:100:root@pam: (duration: 2.03s)
+2025-10-24 19:35:23,966 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:23,979 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve1/qemu/103/config HTTP/1.1" 400 171
+2025-10-24 19:35:23,980 - lazy_teacher.modules.deploy_stand_local - ERROR - log_error:105 - Configure network for VM 103 failed: 400 Bad Request: Parameter verification failed. - {'net0': "invalid format - format error\nnet0.bridge: invalid format - invalid bridge ID 'vmbr0**'\n\n"}
+Traceback (most recent call last):
+  File "/data/git/lazy_teacher/modules/deploy_stand_local.py", line 292, in _configure_vm_network
+    proxmox.nodes(node).qemu(vmid).config.put(**{net_key: net_config})
+  File "/home/user/.local/lib/python3/site-packages/proxmoxer/core.py", line 175, in put
+    return self(args)._request("PUT", data=data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/.local/lib/python3/site-packages/proxmoxer/core.py", line 149, in _request
+    raise ResourceException(
+proxmoxer.core.ResourceException: 400 Bad Request: Parameter verification failed. - {'net0': "invalid format - format error\nnet0.bridge: invalid format - invalid bridge ID 'vmbr0**'\n\n"}
+2025-10-24 19:35:23,982 - lazy_teacher.modules.deploy_stand_local - ERROR - _deploy_user_stand:354 - Failed to configure network for VM 103
+2025-10-24 19:35:23,983 - lazy_teacher.modules.deploy_stand_local - ERROR - _deploy_user_stand:365 - No VMs were deployed for user user3@pve
+2025-10-24 19:35:23,983 - lazy_teacher.modules.deploy_stand_local - DEBUG - __exit__:126 - Completed: Deploy stand for user user3@pve (duration: 2.17s)
+2025-10-24 19:35:23,983 - lazy_teacher.modules.deploy_stand_local - ERROR - deploy_stand_local:509 - Failed to deploy stand for user user3
+2025-10-24 19:35:23,984 - lazy_teacher.modules.network - DEBUG - __enter__:118 - Started: Reload network on pve1
+2025-10-24 19:35:23,984 - lazy_teacher.modules.network - INFO - reload_network:33 - Initiating network reload on node 'pve1' with 30s timeout
+2025-10-24 19:35:23,985 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:35:24,087 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve1/network HTTP/1.1" 200 78
+2025-10-24 19:35:26,089 - lazy_teacher.modules.network - INFO - reload_network:44 - Network reload completed on node 'pve1' in 2.1s
+2025-10-24 19:35:26,089 - lazy_teacher.modules.network - DEBUG - reload_network:48 - Network reload result: UPID:pve1:00006882:000CBA3F:68FB8EAC:srvreload:networking:root@pam:
+2025-10-24 19:35:26,089 - lazy_teacher.modules.network - INFO - log_operation:88 - Network reload successful - SUCCESS [node=pve1, duration=2.1036880016326904]
+2025-10-24 19:35:26,090 - lazy_teacher.modules.network - DEBUG - __exit__:126 - Completed: Reload network on pve1 (duration: 2.11s)
+2025-10-24 19:35:26,090 - lazy_teacher.modules.deploy_stand_local - INFO - deploy_stand_local:514 - Final network reload completed successfully
+2025-10-24 19:35:26,091 - lazy_teacher.modules.deploy_stand_local - ERROR - log_operation:88 - Local stand deployment session completed - FAILED [total_users=3, successful_deployments=0, failed_deployments=3, success_rate=0.0%, target_node=pve1]
+2025-10-24 19:35:26,092 - lazy_teacher.modules.deploy_stand_local - DEBUG - __exit__:126 - Completed: Full local stand deployment (duration: 11.64s)
+2025-10-24 19:36:29,402 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Select default connection
+2025-10-24 19:36:29,403 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:36:29,405 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Test connection test
+2025-10-24 19:36:29,443 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:36:29,563 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 801
+2025-10-24 19:36:29,565 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:36:29,578 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/resources HTTP/1.1" 200 774
+2025-10-24 19:36:29,578 - lazy_teacher.modules.connections - INFO - test_connection:103 - Connection test successful - conn: test, host: 192.168.122.201
+2025-10-24 19:36:29,579 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Test connection test (duration: 0.17s)
+2025-10-24 19:36:29,581 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Select default connection
+2025-10-24 19:36:29,582 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:36:29,582 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Test connection test
+2025-10-24 19:36:29,583 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:36:29,702 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 796
+2025-10-24 19:36:29,704 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:36:29,716 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/resources HTTP/1.1" 200 779
+2025-10-24 19:36:29,716 - lazy_teacher.modules.connections - INFO - test_connection:103 - Connection test successful - conn: test, host: 192.168.122.201
+2025-10-24 19:36:29,717 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Test connection test (duration: 0.13s)
+2025-10-24 19:36:29,719 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Select default connection
+2025-10-24 19:36:29,719 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:36:29,719 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Test connection test
+2025-10-24 19:36:29,720 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:36:29,831 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 806
+2025-10-24 19:36:29,833 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:36:29,845 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/resources HTTP/1.1" 200 761
+2025-10-24 19:36:29,846 - lazy_teacher.modules.connections - INFO - test_connection:103 - Connection test successful - conn: test, host: 192.168.122.201
+2025-10-24 19:36:29,846 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Test connection test (duration: 0.13s)
+2025-10-24 19:36:29,848 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Select default connection
+2025-10-24 19:36:29,849 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:36:29,849 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Test connection test
+2025-10-24 19:36:29,849 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:36:29,960 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 797
+2025-10-24 19:36:29,962 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:36:29,974 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/resources HTTP/1.1" 200 763
+2025-10-24 19:36:29,974 - lazy_teacher.modules.connections - INFO - test_connection:103 - Connection test successful - conn: test, host: 192.168.122.201
+2025-10-24 19:36:29,975 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Test connection test (duration: 0.13s)
+2025-10-24 19:36:29,976 - lazy_teacher.modules.connections - ERROR - __exit__:124 - Failed: Select default connection (duration: 0.13s)
+Traceback (most recent call last):
+  File "/data/git/lazy_teacher/modules/connections.py", line 291, in select_default_connection
+    choice = int(input("Выберите номер подключения: ")) - 1
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+EOFError: EOF when reading a line
+2025-10-24 19:36:29,978 - lazy_teacher.modules.connections - ERROR - __exit__:124 - Failed: Select default connection (duration: 0.26s)
+Traceback (most recent call last):
+  File "/data/git/lazy_teacher/modules/connections.py", line 303, in select_default_connection
+    return select_default_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/git/lazy_teacher/modules/connections.py", line 291, in select_default_connection
+    choice = int(input("Выберите номер подключения: ")) - 1
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+EOFError: EOF when reading a line
+2025-10-24 19:36:29,981 - lazy_teacher.modules.connections - ERROR - __exit__:124 - Failed: Select default connection (duration: 0.40s)
+Traceback (most recent call last):
+  File "/data/git/lazy_teacher/modules/connections.py", line 303, in select_default_connection
+    return select_default_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/git/lazy_teacher/modules/connections.py", line 303, in select_default_connection
+    return select_default_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/git/lazy_teacher/modules/connections.py", line 291, in select_default_connection
+    choice = int(input("Выберите номер подключения: ")) - 1
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+EOFError: EOF when reading a line
+2025-10-24 19:36:29,983 - lazy_teacher.modules.connections - ERROR - __exit__:124 - Failed: Select default connection (duration: 0.58s)
+Traceback (most recent call last):
+  File "/data/git/lazy_teacher/modules/connections.py", line 303, in select_default_connection
+    return select_default_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/git/lazy_teacher/modules/connections.py", line 303, in select_default_connection
+    return select_default_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/git/lazy_teacher/modules/connections.py", line 303, in select_default_connection
+    return select_default_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/git/lazy_teacher/modules/connections.py", line 291, in select_default_connection
+    choice = int(input("Выберите номер подключения: ")) - 1
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+EOFError: EOF when reading a line
+2025-10-24 19:36:42,490 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Select default connection
+2025-10-24 19:36:42,491 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:36:42,493 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Test connection test
+2025-10-24 19:36:42,537 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:36:42,659 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 798
+2025-10-24 19:36:42,661 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:36:42,674 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/resources HTTP/1.1" 200 801
+2025-10-24 19:36:42,674 - lazy_teacher.modules.connections - INFO - test_connection:103 - Connection test successful - conn: test, host: 192.168.122.201
+2025-10-24 19:36:42,675 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Test connection test (duration: 0.18s)
+2025-10-24 19:36:42,677 - lazy_teacher.modules.connections - ERROR - __exit__:124 - Failed: Select default connection (duration: 0.19s)
+Traceback (most recent call last):
+  File "/data/git/lazy_teacher/modules/connections.py", line 291, in select_default_connection
+    choice = int(input("Выберите номер подключения: ")) - 1
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+EOFError: EOF when reading a line
+2025-10-24 19:39:14,083 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Select default connection
+2025-10-24 19:39:14,083 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:39:14,085 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Test connection test
+2025-10-24 19:39:14,124 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:39:14,234 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 802
+2025-10-24 19:39:14,236 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:39:14,247 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/resources HTTP/1.1" 200 791
+2025-10-24 19:39:14,247 - lazy_teacher.modules.connections - INFO - test_connection:103 - Connection test successful - conn: test, host: 192.168.122.201
+2025-10-24 19:39:14,248 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Test connection test (duration: 0.16s)
+2025-10-24 19:39:15,872 - lazy_teacher.modules.connections - INFO - select_default_connection:295 - Default connection selected - conn: test
+2025-10-24 19:39:15,873 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Select default connection (duration: 1.79s)
+2025-10-24 19:39:18,559 - lazy_teacher.modules.deletion - DEBUG - __enter__:118 - Started: Delete all user stands
+2025-10-24 19:39:19,136 - lazy_teacher.modules.deletion - INFO - delete_all_user_stands:313 - Starting deletion of 3 user stands from list 'test'
+2025-10-24 19:39:19,139 - lazy_teacher.modules.deletion - INFO - delete_user_stand_logic:240 - Starting stand deletion for user: user1@pve
+2025-10-24 19:39:19,140 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:39:19,140 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Get Proxmox connection test
+2025-10-24 19:39:19,141 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:39:19,251 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 793
+2025-10-24 19:39:19,252 - lazy_teacher.modules.connections - INFO - get_proxmox_connection:341 - Proxmox connection established - conn: test, host: 192.168.122.201
+2025-10-24 19:39:19,253 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Get Proxmox connection test (duration: 0.11s)
+2025-10-24 19:39:19,254 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:39:19,266 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/access/users HTTP/1.1" 200 294
+2025-10-24 19:39:19,268 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:19,277 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/pools HTTP/1.1" 200 67
+2025-10-24 19:39:19,279 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/pools/user1 HTTP/1.1" 200 278
+2025-10-24 19:39:19,279 - lazy_teacher.modules.deletion - INFO - delete_user_stand_logic:280 - Found 1 VMs to delete on nodes: {'pve1'}
+2025-10-24 19:39:19,282 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/qemu/101/config HTTP/1.1" 200 428
+2025-10-24 19:39:19,284 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes HTTP/1.1" 200 966
+2025-10-24 19:39:19,295 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/qemu HTTP/1.1" 200 11
+2025-10-24 19:39:19,296 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:19,310 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/qemu HTTP/1.1" 200 744
+2025-10-24 19:39:19,311 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:19,338 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/nodes/pve1/qemu/101?purge=1 HTTP/1.1" 200 71
+2025-10-24 19:39:19,340 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for generic task UPID:pve1:00006B1C:000D1624:68FB8F97:qmdestroy:101:root@pam:
+2025-10-24 19:39:19,340 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:19,357 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006B1C:000D1624:68FB8F97:qmdestroy:101:root@pam:/status HTTP/1.1" 200 212
+2025-10-24 19:39:21,359 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:21,371 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006B1C:000D1624:68FB8F97:qmdestroy:101:root@pam:/status HTTP/1.1" 200 230
+2025-10-24 19:39:21,372 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Generic task completed successfully
+2025-10-24 19:39:21,372 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for generic task UPID:pve1:00006B1C:000D1624:68FB8F97:qmdestroy:101:root@pam: (duration: 2.03s)
+2025-10-24 19:39:21,372 - lazy_teacher.modules.deletion - INFO - _delete_vms_from_pool:158 - VM 101 deleted from node pve1
+2025-10-24 19:39:21,373 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:21,391 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/pools/user1 HTTP/1.1" 200 13
+2025-10-24 19:39:21,392 - lazy_teacher.modules.deletion - INFO - _delete_pool_and_user:174 - Pool user1 deleted
+2025-10-24 19:39:21,393 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:21,415 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/access/users/user1@pve HTTP/1.1" 200 13
+2025-10-24 19:39:21,415 - lazy_teacher.modules.deletion - INFO - _delete_pool_and_user:181 - User user1@pve deleted
+2025-10-24 19:39:21,416 - lazy_teacher.modules.network - DEBUG - __enter__:118 - Started: Reload network on pve1
+2025-10-24 19:39:21,416 - lazy_teacher.modules.network - INFO - reload_network:33 - Initiating network reload on node 'pve1' with 30s timeout
+2025-10-24 19:39:21,417 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:21,526 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve1/network HTTP/1.1" 200 78
+2025-10-24 19:39:23,527 - lazy_teacher.modules.network - INFO - reload_network:44 - Network reload completed on node 'pve1' in 2.1s
+2025-10-24 19:39:23,528 - lazy_teacher.modules.network - DEBUG - reload_network:48 - Network reload result: UPID:pve1:00006B2C:000D16FF:68FB8F99:srvreload:networking:root@pam:
+2025-10-24 19:39:23,528 - lazy_teacher.modules.network - INFO - log_operation:88 - Network reload successful - SUCCESS [node=pve1, duration=2.110567808151245]
+2025-10-24 19:39:23,529 - lazy_teacher.modules.network - DEBUG - __exit__:126 - Completed: Reload network on pve1 (duration: 2.11s)
+2025-10-24 19:39:23,529 - lazy_teacher.modules.deletion - INFO - _delete_bridges_and_reload_network:202 - Network reloaded on node pve1
+2025-10-24 19:39:23,529 - lazy_teacher.modules.deletion - INFO - log_operation:88 - User stand deletion completed - SUCCESS [user=user1@pve, pool_name=user1, vms_deleted=1, bridges_deleted=0, nodes_reloaded=1]
+2025-10-24 19:39:23,531 - lazy_teacher.modules.deletion - INFO - delete_user_stand_logic:240 - Starting stand deletion for user: user2@pve
+2025-10-24 19:39:23,532 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:39:23,532 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Get Proxmox connection test
+2025-10-24 19:39:23,533 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:39:23,653 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 792
+2025-10-24 19:39:23,655 - lazy_teacher.modules.connections - INFO - get_proxmox_connection:341 - Proxmox connection established - conn: test, host: 192.168.122.201
+2025-10-24 19:39:23,656 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Get Proxmox connection test (duration: 0.12s)
+2025-10-24 19:39:23,656 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:39:23,669 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/access/users HTTP/1.1" 200 230
+2025-10-24 19:39:23,671 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:23,680 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/pools HTTP/1.1" 200 48
+2025-10-24 19:39:23,681 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/pools/user2 HTTP/1.1" 200 278
+2025-10-24 19:39:23,682 - lazy_teacher.modules.deletion - INFO - delete_user_stand_logic:280 - Found 1 VMs to delete on nodes: {'pve1'}
+2025-10-24 19:39:23,684 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/qemu/102/config HTTP/1.1" 200 428
+2025-10-24 19:39:23,686 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes HTTP/1.1" 200 966
+2025-10-24 19:39:23,695 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/qemu HTTP/1.1" 200 11
+2025-10-24 19:39:23,697 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:23,710 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/qemu HTTP/1.1" 200 564
+2025-10-24 19:39:23,711 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:23,735 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/nodes/pve1/qemu/102?purge=1 HTTP/1.1" 200 71
+2025-10-24 19:39:23,736 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for generic task UPID:pve1:00006B69:000D17DC:68FB8F9B:qmdestroy:102:root@pam:
+2025-10-24 19:39:23,737 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:23,751 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006B69:000D17DC:68FB8F9B:qmdestroy:102:root@pam:/status HTTP/1.1" 200 212
+2025-10-24 19:39:25,753 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:25,765 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006B69:000D17DC:68FB8F9B:qmdestroy:102:root@pam:/status HTTP/1.1" 200 230
+2025-10-24 19:39:25,766 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Generic task completed successfully
+2025-10-24 19:39:25,767 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for generic task UPID:pve1:00006B69:000D17DC:68FB8F9B:qmdestroy:102:root@pam: (duration: 2.03s)
+2025-10-24 19:39:25,767 - lazy_teacher.modules.deletion - INFO - _delete_vms_from_pool:158 - VM 102 deleted from node pve1
+2025-10-24 19:39:25,768 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:25,783 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/pools/user2 HTTP/1.1" 200 13
+2025-10-24 19:39:25,784 - lazy_teacher.modules.deletion - INFO - _delete_pool_and_user:174 - Pool user2 deleted
+2025-10-24 19:39:25,785 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:25,807 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/access/users/user2@pve HTTP/1.1" 200 13
+2025-10-24 19:39:25,809 - lazy_teacher.modules.deletion - INFO - _delete_pool_and_user:181 - User user2@pve deleted
+2025-10-24 19:39:25,809 - lazy_teacher.modules.network - DEBUG - __enter__:118 - Started: Reload network on pve1
+2025-10-24 19:39:25,809 - lazy_teacher.modules.network - INFO - reload_network:33 - Initiating network reload on node 'pve1' with 30s timeout
+2025-10-24 19:39:25,810 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:25,918 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve1/network HTTP/1.1" 200 78
+2025-10-24 19:39:27,920 - lazy_teacher.modules.network - INFO - reload_network:44 - Network reload completed on node 'pve1' in 2.1s
+2025-10-24 19:39:27,921 - lazy_teacher.modules.network - DEBUG - reload_network:48 - Network reload result: UPID:pve1:00006B79:000D18B6:68FB8F9D:srvreload:networking:root@pam:
+2025-10-24 19:39:27,921 - lazy_teacher.modules.network - INFO - log_operation:88 - Network reload successful - SUCCESS [node=pve1, duration=2.109819173812866]
+2025-10-24 19:39:27,922 - lazy_teacher.modules.network - DEBUG - __exit__:126 - Completed: Reload network on pve1 (duration: 2.11s)
+2025-10-24 19:39:27,922 - lazy_teacher.modules.deletion - INFO - _delete_bridges_and_reload_network:202 - Network reloaded on node pve1
+2025-10-24 19:39:27,922 - lazy_teacher.modules.deletion - INFO - log_operation:88 - User stand deletion completed - SUCCESS [user=user2@pve, pool_name=user2, vms_deleted=1, bridges_deleted=0, nodes_reloaded=1]
+2025-10-24 19:39:27,924 - lazy_teacher.modules.deletion - INFO - delete_user_stand_logic:240 - Starting stand deletion for user: user3@pve
+2025-10-24 19:39:27,925 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:39:27,925 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Get Proxmox connection test
+2025-10-24 19:39:27,925 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:39:28,038 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 803
+2025-10-24 19:39:28,039 - lazy_teacher.modules.connections - INFO - get_proxmox_connection:341 - Proxmox connection established - conn: test, host: 192.168.122.201
+2025-10-24 19:39:28,040 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Get Proxmox connection test (duration: 0.12s)
+2025-10-24 19:39:28,041 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:39:28,054 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/access/users HTTP/1.1" 200 166
+2025-10-24 19:39:28,056 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:28,065 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/pools HTTP/1.1" 200 29
+2025-10-24 19:39:28,066 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/pools/user3 HTTP/1.1" 200 278
+2025-10-24 19:39:28,067 - lazy_teacher.modules.deletion - INFO - delete_user_stand_logic:280 - Found 1 VMs to delete on nodes: {'pve1'}
+2025-10-24 19:39:28,068 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/qemu/103/config HTTP/1.1" 200 428
+2025-10-24 19:39:28,070 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes HTTP/1.1" 200 967
+2025-10-24 19:39:28,081 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/qemu HTTP/1.1" 200 11
+2025-10-24 19:39:28,082 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:28,095 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/qemu HTTP/1.1" 200 384
+2025-10-24 19:39:28,096 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:28,123 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/nodes/pve1/qemu/103?purge=1 HTTP/1.1" 200 71
+2025-10-24 19:39:28,124 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for generic task UPID:pve1:00006BA1:000D1992:68FB8FA0:qmdestroy:103:root@pam:
+2025-10-24 19:39:28,124 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:28,138 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006BA1:000D1992:68FB8FA0:qmdestroy:103:root@pam:/status HTTP/1.1" 200 212
+2025-10-24 19:39:30,140 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:30,152 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006BA1:000D1992:68FB8FA0:qmdestroy:103:root@pam:/status HTTP/1.1" 200 230
+2025-10-24 19:39:30,152 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Generic task completed successfully
+2025-10-24 19:39:30,153 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for generic task UPID:pve1:00006BA1:000D1992:68FB8FA0:qmdestroy:103:root@pam: (duration: 2.03s)
+2025-10-24 19:39:30,153 - lazy_teacher.modules.deletion - INFO - _delete_vms_from_pool:158 - VM 103 deleted from node pve1
+2025-10-24 19:39:30,154 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:30,175 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/pools/user3 HTTP/1.1" 200 13
+2025-10-24 19:39:30,176 - lazy_teacher.modules.deletion - INFO - _delete_pool_and_user:174 - Pool user3 deleted
+2025-10-24 19:39:30,178 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:30,198 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/access/users/user3@pve HTTP/1.1" 200 13
+2025-10-24 19:39:30,200 - lazy_teacher.modules.deletion - INFO - _delete_pool_and_user:181 - User user3@pve deleted
+2025-10-24 19:39:30,201 - lazy_teacher.modules.network - DEBUG - __enter__:118 - Started: Reload network on pve1
+2025-10-24 19:39:30,201 - lazy_teacher.modules.network - INFO - reload_network:33 - Initiating network reload on node 'pve1' with 30s timeout
+2025-10-24 19:39:30,202 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:30,307 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve1/network HTTP/1.1" 200 78
+2025-10-24 19:39:32,309 - lazy_teacher.modules.network - INFO - reload_network:44 - Network reload completed on node 'pve1' in 2.1s
+2025-10-24 19:39:32,309 - lazy_teacher.modules.network - DEBUG - reload_network:48 - Network reload result: UPID:pve1:00006BB1:000D1A6D:68FB8FA2:srvreload:networking:root@pam:
+2025-10-24 19:39:32,309 - lazy_teacher.modules.network - INFO - log_operation:88 - Network reload successful - SUCCESS [node=pve1, duration=2.107400894165039]
+2025-10-24 19:39:32,310 - lazy_teacher.modules.network - DEBUG - __exit__:126 - Completed: Reload network on pve1 (duration: 2.11s)
+2025-10-24 19:39:32,310 - lazy_teacher.modules.deletion - INFO - _delete_bridges_and_reload_network:202 - Network reloaded on node pve1
+2025-10-24 19:39:32,311 - lazy_teacher.modules.deletion - INFO - log_operation:88 - User stand deletion completed - SUCCESS [user=user3@pve, pool_name=user3, vms_deleted=1, bridges_deleted=0, nodes_reloaded=1]
+2025-10-24 19:39:32,313 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:39:32,313 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Get Proxmox connection test
+2025-10-24 19:39:32,313 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:39:32,428 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 807
+2025-10-24 19:39:32,429 - lazy_teacher.modules.connections - INFO - get_proxmox_connection:341 - Proxmox connection established - conn: test, host: 192.168.122.201
+2025-10-24 19:39:32,430 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Get Proxmox connection test (duration: 0.12s)
+2025-10-24 19:39:32,430 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:39:32,441 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes HTTP/1.1" 200 967
+2025-10-24 19:39:32,441 - lazy_teacher.modules.deletion - INFO - delete_all_user_stands:346 - Performing final network reload on 3 nodes
+2025-10-24 19:39:32,442 - lazy_teacher.modules.network - DEBUG - __enter__:118 - Started: Reload network on pve3
+2025-10-24 19:39:32,442 - lazy_teacher.modules.network - INFO - reload_network:33 - Initiating network reload on node 'pve3' with 30s timeout
+2025-10-24 19:39:32,543 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve3/network HTTP/1.1" 200 78
+2025-10-24 19:39:34,545 - lazy_teacher.modules.network - INFO - reload_network:44 - Network reload completed on node 'pve3' in 2.1s
+2025-10-24 19:39:34,546 - lazy_teacher.modules.network - DEBUG - reload_network:48 - Network reload result: UPID:pve3:00006341:000D1A1E:68FB8FA4:srvreload:networking:root@pam:
+2025-10-24 19:39:34,546 - lazy_teacher.modules.network - INFO - log_operation:88 - Network reload successful - SUCCESS [node=pve3, duration=2.102003335952759]
+2025-10-24 19:39:34,546 - lazy_teacher.modules.network - DEBUG - __exit__:126 - Completed: Reload network on pve3 (duration: 2.10s)
+2025-10-24 19:39:34,547 - lazy_teacher.modules.deletion - DEBUG - delete_all_user_stands:350 - Final network reload completed on pve3
+2025-10-24 19:39:34,547 - lazy_teacher.modules.network - DEBUG - __enter__:118 - Started: Reload network on pve1
+2025-10-24 19:39:34,547 - lazy_teacher.modules.network - INFO - reload_network:33 - Initiating network reload on node 'pve1' with 30s timeout
+2025-10-24 19:39:34,548 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:34,653 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve1/network HTTP/1.1" 200 78
+2025-10-24 19:39:36,655 - lazy_teacher.modules.network - INFO - reload_network:44 - Network reload completed on node 'pve1' in 2.1s
+2025-10-24 19:39:36,655 - lazy_teacher.modules.network - DEBUG - reload_network:48 - Network reload result: UPID:pve1:00006BF3:000D1C1F:68FB8FA6:srvreload:networking:root@pam:
+2025-10-24 19:39:36,655 - lazy_teacher.modules.network - INFO - log_operation:88 - Network reload successful - SUCCESS [node=pve1, duration=2.107349395751953]
+2025-10-24 19:39:36,656 - lazy_teacher.modules.network - DEBUG - __exit__:126 - Completed: Reload network on pve1 (duration: 2.11s)
+2025-10-24 19:39:36,656 - lazy_teacher.modules.deletion - DEBUG - delete_all_user_stands:350 - Final network reload completed on pve1
+2025-10-24 19:39:36,656 - lazy_teacher.modules.network - DEBUG - __enter__:118 - Started: Reload network on pve2
+2025-10-24 19:39:36,656 - lazy_teacher.modules.network - INFO - reload_network:33 - Initiating network reload on node 'pve2' with 30s timeout
+2025-10-24 19:39:36,657 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:39:36,769 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve2/network HTTP/1.1" 200 78
+2025-10-24 19:39:38,771 - lazy_teacher.modules.network - INFO - reload_network:44 - Network reload completed on node 'pve2' in 2.1s
+2025-10-24 19:39:38,771 - lazy_teacher.modules.network - DEBUG - reload_network:48 - Network reload result: UPID:pve2:00006369:000D1C8C:68FB8FA8:srvreload:networking:root@pam:
+2025-10-24 19:39:38,771 - lazy_teacher.modules.network - INFO - log_operation:88 - Network reload successful - SUCCESS [node=pve2, duration=2.113750457763672]
+2025-10-24 19:39:38,772 - lazy_teacher.modules.network - DEBUG - __exit__:126 - Completed: Reload network on pve2 (duration: 2.12s)
+2025-10-24 19:39:38,772 - lazy_teacher.modules.deletion - DEBUG - delete_all_user_stands:350 - Final network reload completed on pve2
+2025-10-24 19:39:38,772 - lazy_teacher.modules.deletion - INFO - log_operation:88 - Bulk stand deletion completed - SUCCESS [total_users=3, deleted_count=3, failed_count=0]
+2025-10-24 19:39:38,773 - lazy_teacher.modules.deletion - DEBUG - __exit__:126 - Completed: Delete all user stands (duration: 20.21s)
+2025-10-24 19:39:56,719 - lazy_teacher.modules.ui_menus - DEBUG - __enter__:118 - Started: Select from config/*_stand.yaml
+2025-10-24 19:39:57,224 - lazy_teacher.modules.ui_menus - INFO - select_from_config_files:121 - Selected _stand: test (file: config/test_stand.yaml)
+2025-10-24 19:39:57,225 - lazy_teacher.modules.ui_menus - DEBUG - __exit__:126 - Completed: Select from config/*_stand.yaml (duration: 0.51s)
+2025-10-24 19:39:57,225 - lazy_teacher.modules.ui_menus - DEBUG - __enter__:118 - Started: Select from config/*_list.yaml
+2025-10-24 19:39:58,487 - lazy_teacher.modules.ui_menus - INFO - select_from_config_files:121 - Selected _list: test (file: config/test_list.yaml)
+2025-10-24 19:39:58,488 - lazy_teacher.modules.ui_menus - DEBUG - __exit__:126 - Completed: Select from config/*_list.yaml (duration: 1.26s)
+2025-10-24 19:39:58,488 - lazy_teacher.modules.ui_menus - DEBUG - __enter__:118 - Started: Select clone type
+2025-10-24 19:40:02,807 - lazy_teacher.modules.ui_menus - INFO - select_clone_type:379 - Selected clone type: full
+2025-10-24 19:40:02,807 - lazy_teacher.modules.ui_menus - DEBUG - __exit__:126 - Completed: Select clone type (duration: 4.32s)
+2025-10-24 19:40:02,808 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:40:02,808 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Get Proxmox connection test
+2025-10-24 19:40:02,808 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:40:02,920 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 801
+2025-10-24 19:40:02,922 - lazy_teacher.modules.connections - INFO - get_proxmox_connection:341 - Proxmox connection established - conn: test, host: 192.168.122.201
+2025-10-24 19:40:02,922 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Get Proxmox connection test (duration: 0.11s)
+2025-10-24 19:40:02,923 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:40:02,934 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes HTTP/1.1" 200 967
+2025-10-24 19:40:02,935 - lazy_teacher.modules.sync_templates - DEBUG - __enter__:118 - Started: Sync templates across nodes
+2025-10-24 19:40:02,935 - lazy_teacher.modules.sync_templates - INFO - sync_templates:196 - Starting template synchronization for 3 nodes
+2025-10-24 19:40:02,936 - lazy_teacher.modules.sync_templates - DEBUG - _group_machines_by_template:40 - Grouped machines into 1 template groups
+2025-10-24 19:40:02,936 - lazy_teacher.modules.sync_templates - INFO - sync_templates:208 - Processing template 100 used by 2 machines
+2025-10-24 19:40:02,936 - lazy_teacher.modules.sync_templates - DEBUG - sync_templates:222 - Checking template 100 replica on node pve2
+2025-10-24 19:40:02,945 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/qemu HTTP/1.1" 200 11
+2025-10-24 19:40:02,946 - lazy_teacher.modules.sync_templates - DEBUG - _remove_invalid_replica:79 - Removed invalid replica entry for node pve2 from machine gw
+2025-10-24 19:40:02,946 - lazy_teacher.modules.sync_templates - DEBUG - _remove_invalid_replica:79 - Removed invalid replica entry for node pve2 from machine hq
+2025-10-24 19:40:02,946 - lazy_teacher.modules.sync_templates - INFO - sync_templates:234 - Creating template 100 replica on pve2
+2025-10-24 19:40:02,947 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:02,956 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/nextid HTTP/1.1" 200 14
+2025-10-24 19:40:02,957 - lazy_teacher.modules.sync_templates - INFO - _create_template_replica:101 - Creating template clone 101 from 100 on pve1
+2025-10-24 19:40:02,975 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve1/qemu/100/clone HTTP/1.1" 200 69
+2025-10-24 19:40:02,976 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for clone task UPID:pve1:00006C9D:000D2730:68FB8FC2:qmclone:100:root@pam:
+2025-10-24 19:40:02,976 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:02,991 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006C9D:000D2730:68FB8FC2:qmclone:100:root@pam:/status HTTP/1.1" 200 208
+2025-10-24 19:40:04,993 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:05,006 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006C9D:000D2730:68FB8FC2:qmclone:100:root@pam:/status HTTP/1.1" 200 226
+2025-10-24 19:40:05,007 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Clone task completed successfully
+2025-10-24 19:40:05,008 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for clone task UPID:pve1:00006C9D:000D2730:68FB8FC2:qmclone:100:root@pam: (duration: 2.03s)
+2025-10-24 19:40:05,008 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:05,035 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve1/qemu/101/template HTTP/1.1" 200 72
+2025-10-24 19:40:05,036 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for template task UPID:pve1:00006CC6:000D27FE:68FB8FC5:qmtemplate:101:root@pam:
+2025-10-24 19:40:05,037 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:05,051 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006CC6:000D27FE:68FB8FC5:qmtemplate:101:root@pam:/status HTTP/1.1" 200 214
+2025-10-24 19:40:07,053 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:07,064 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006CC6:000D27FE:68FB8FC5:qmtemplate:101:root@pam:/status HTTP/1.1" 200 232
+2025-10-24 19:40:07,065 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Template task completed successfully
+2025-10-24 19:40:07,066 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for template task UPID:pve1:00006CC6:000D27FE:68FB8FC5:qmtemplate:101:root@pam: (duration: 2.03s)
+2025-10-24 19:40:07,066 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:07,093 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve1/qemu/101/migrate HTTP/1.1" 200 70
+2025-10-24 19:40:07,094 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for migration task UPID:pve1:00006CFE:000D28CB:68FB8FC7:qmigrate:101:root@pam:
+2025-10-24 19:40:07,095 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:07,109 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006CFE:000D28CB:68FB8FC7:qmigrate:101:root@pam:/status HTTP/1.1" 200 210
+2025-10-24 19:40:12,111 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:12,125 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006CFE:000D28CB:68FB8FC7:qmigrate:101:root@pam:/status HTTP/1.1" 200 210
+2025-10-24 19:40:17,127 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:17,139 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006CFE:000D28CB:68FB8FC7:qmigrate:101:root@pam:/status HTTP/1.1" 200 228
+2025-10-24 19:40:17,140 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Migration task completed successfully
+2025-10-24 19:40:17,141 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for migration task UPID:pve1:00006CFE:000D28CB:68FB8FC7:qmigrate:101:root@pam: (duration: 10.05s)
+2025-10-24 19:40:17,141 - lazy_teacher.modules.sync_templates - DEBUG - _assign_replicas:174 - Assigned replica 101 on pve2 to machine gw
+2025-10-24 19:40:17,141 - lazy_teacher.modules.sync_templates - DEBUG - _assign_replicas:174 - Assigned replica 101 on pve2 to machine hq
+2025-10-24 19:40:17,141 - lazy_teacher.modules.sync_templates - INFO - log_operation:88 - Template replica created - SUCCESS [template_vmid=100, clone_vmid=101, target_node=pve2, machine_count=2]
+2025-10-24 19:40:17,142 - lazy_teacher.modules.sync_templates - INFO - log_operation:88 - Template synchronized - SUCCESS [template_vmid=100, target_node=pve2, machine_count=2]
+2025-10-24 19:40:17,143 - lazy_teacher.modules.sync_templates - DEBUG - sync_templates:222 - Checking template 100 replica on node pve3
+2025-10-24 19:40:17,143 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:17,160 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/qemu HTTP/1.1" 200 11
+2025-10-24 19:40:17,161 - lazy_teacher.modules.sync_templates - DEBUG - _remove_invalid_replica:79 - Removed invalid replica entry for node pve3 from machine gw
+2025-10-24 19:40:17,161 - lazy_teacher.modules.sync_templates - DEBUG - _remove_invalid_replica:79 - Removed invalid replica entry for node pve3 from machine hq
+2025-10-24 19:40:17,161 - lazy_teacher.modules.sync_templates - INFO - sync_templates:234 - Creating template 100 replica on pve3
+2025-10-24 19:40:17,162 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:17,171 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/nextid HTTP/1.1" 200 14
+2025-10-24 19:40:17,171 - lazy_teacher.modules.sync_templates - INFO - _create_template_replica:101 - Creating template clone 102 from 100 on pve1
+2025-10-24 19:40:17,191 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve1/qemu/100/clone HTTP/1.1" 200 69
+2025-10-24 19:40:17,192 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for clone task UPID:pve1:00006D3A:000D2CBD:68FB8FD1:qmclone:100:root@pam:
+2025-10-24 19:40:17,193 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:17,209 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006D3A:000D2CBD:68FB8FD1:qmclone:100:root@pam:/status HTTP/1.1" 200 208
+2025-10-24 19:40:19,211 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:19,224 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006D3A:000D2CBD:68FB8FD1:qmclone:100:root@pam:/status HTTP/1.1" 200 226
+2025-10-24 19:40:19,225 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Clone task completed successfully
+2025-10-24 19:40:19,226 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for clone task UPID:pve1:00006D3A:000D2CBD:68FB8FD1:qmclone:100:root@pam: (duration: 2.03s)
+2025-10-24 19:40:19,226 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:19,254 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve1/qemu/102/template HTTP/1.1" 200 72
+2025-10-24 19:40:19,255 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for template task UPID:pve1:00006D61:000D2D8B:68FB8FD3:qmtemplate:102:root@pam:
+2025-10-24 19:40:19,256 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:19,269 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006D61:000D2D8B:68FB8FD3:qmtemplate:102:root@pam:/status HTTP/1.1" 200 214
+2025-10-24 19:40:21,271 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:21,283 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006D61:000D2D8B:68FB8FD3:qmtemplate:102:root@pam:/status HTTP/1.1" 200 232
+2025-10-24 19:40:21,284 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Template task completed successfully
+2025-10-24 19:40:21,284 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for template task UPID:pve1:00006D61:000D2D8B:68FB8FD3:qmtemplate:102:root@pam: (duration: 2.03s)
+2025-10-24 19:40:21,285 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:21,311 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve1/qemu/102/migrate HTTP/1.1" 200 70
+2025-10-24 19:40:21,313 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for migration task UPID:pve1:00006D97:000D2E59:68FB8FD5:qmigrate:102:root@pam:
+2025-10-24 19:40:21,313 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:21,327 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006D97:000D2E59:68FB8FD5:qmigrate:102:root@pam:/status HTTP/1.1" 200 210
+2025-10-24 19:40:26,329 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:26,344 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006D97:000D2E59:68FB8FD5:qmigrate:102:root@pam:/status HTTP/1.1" 200 210
+2025-10-24 19:40:31,345 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:31,358 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006D97:000D2E59:68FB8FD5:qmigrate:102:root@pam:/status HTTP/1.1" 200 228
+2025-10-24 19:40:31,359 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Migration task completed successfully
+2025-10-24 19:40:31,360 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for migration task UPID:pve1:00006D97:000D2E59:68FB8FD5:qmigrate:102:root@pam: (duration: 10.05s)
+2025-10-24 19:40:31,360 - lazy_teacher.modules.sync_templates - DEBUG - _assign_replicas:174 - Assigned replica 102 on pve3 to machine gw
+2025-10-24 19:40:31,360 - lazy_teacher.modules.sync_templates - DEBUG - _assign_replicas:174 - Assigned replica 102 on pve3 to machine hq
+2025-10-24 19:40:31,360 - lazy_teacher.modules.sync_templates - INFO - log_operation:88 - Template replica created - SUCCESS [template_vmid=100, clone_vmid=102, target_node=pve3, machine_count=2]
+2025-10-24 19:40:31,361 - lazy_teacher.modules.sync_templates - INFO - log_operation:88 - Template synchronized - SUCCESS [template_vmid=100, target_node=pve3, machine_count=2]
+2025-10-24 19:40:31,362 - lazy_teacher.modules.sync_templates - INFO - sync_templates:245 - Template synchronization completed with updates
+2025-10-24 19:40:31,362 - lazy_teacher.modules.sync_templates - DEBUG - __exit__:126 - Completed: Sync templates across nodes (duration: 28.43s)
+2025-10-24 19:40:31,364 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:40:31,364 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Get Proxmox connection test
+2025-10-24 19:40:31,364 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:40:31,473 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 812
+2025-10-24 19:40:31,475 - lazy_teacher.modules.connections - INFO - get_proxmox_connection:341 - Proxmox connection established - conn: test, host: 192.168.122.201
+2025-10-24 19:40:31,475 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Get Proxmox connection test (duration: 0.11s)
+2025-10-24 19:40:31,476 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:40:31,489 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes HTTP/1.1" 200 965
+2025-10-24 19:40:31,511 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/network HTTP/1.1" 200 450
+2025-10-24 19:40:31,531 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve2/network HTTP/1.1" 200 13
+2025-10-24 19:40:31,533 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:31,576 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve2/network/vmbr1000 HTTP/1.1" 200 13
+2025-10-24 19:40:31,577 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:31,605 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/users HTTP/1.1" 200 13
+2025-10-24 19:40:31,606 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:31,624 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/pools HTTP/1.1" 200 13
+2025-10-24 19:40:31,625 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:31,641 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/access/acl HTTP/1.1" 200 13
+2025-10-24 19:40:31,643 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:31,653 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/nextid HTTP/1.1" 200 14
+2025-10-24 19:40:31,678 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve2/qemu/101/clone HTTP/1.1" 200 69
+2025-10-24 19:40:31,680 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for clone task UPID:pve2:0000649B:000D31FF:68FB8FDF:qmclone:101:root@pam:
+2025-10-24 19:40:31,680 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:31,700 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/tasks/UPID:pve2:0000649B:000D31FF:68FB8FDF:qmclone:101:root@pam:/status HTTP/1.1" 200 208
+2025-10-24 19:40:33,702 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:33,734 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/tasks/UPID:pve2:0000649B:000D31FF:68FB8FDF:qmclone:101:root@pam:/status HTTP/1.1" 200 208
+2025-10-24 19:40:35,736 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:35,756 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/tasks/UPID:pve2:0000649B:000D31FF:68FB8FDF:qmclone:101:root@pam:/status HTTP/1.1" 200 226
+2025-10-24 19:40:35,757 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Clone task completed successfully
+2025-10-24 19:40:35,758 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for clone task UPID:pve2:0000649B:000D31FF:68FB8FDF:qmclone:101:root@pam: (duration: 4.08s)
+2025-10-24 19:40:35,758 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:35,788 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve2/qemu/103/config HTTP/1.1" 200 13
+2025-10-24 19:40:35,790 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:35,820 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve2/qemu/103/config HTTP/1.1" 200 13
+2025-10-24 19:40:35,821 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:35,836 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/access/acl HTTP/1.1" 200 13
+2025-10-24 19:40:35,838 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:35,849 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/nextid HTTP/1.1" 200 14
+2025-10-24 19:40:35,875 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve2/qemu/101/clone HTTP/1.1" 200 69
+2025-10-24 19:40:35,876 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for clone task UPID:pve2:000064EA:000D33A3:68FB8FE3:qmclone:101:root@pam:
+2025-10-24 19:40:35,877 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:35,895 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/tasks/UPID:pve2:000064EA:000D33A3:68FB8FE3:qmclone:101:root@pam:/status HTTP/1.1" 200 208
+2025-10-24 19:40:37,896 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:37,915 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/tasks/UPID:pve2:000064EA:000D33A3:68FB8FE3:qmclone:101:root@pam:/status HTTP/1.1" 200 226
+2025-10-24 19:40:37,916 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Clone task completed successfully
+2025-10-24 19:40:37,917 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for clone task UPID:pve2:000064EA:000D33A3:68FB8FE3:qmclone:101:root@pam: (duration: 2.04s)
+2025-10-24 19:40:37,917 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:37,957 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve2/qemu/104/config HTTP/1.1" 200 13
+2025-10-24 19:40:37,959 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:37,981 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/access/acl HTTP/1.1" 200 13
+2025-10-24 19:40:37,983 - lazy_teacher.modules.network - DEBUG - __enter__:118 - Started: Reload network on pve2
+2025-10-24 19:40:37,983 - lazy_teacher.modules.network - INFO - reload_network:33 - Initiating network reload on node 'pve2' with 30s timeout
+2025-10-24 19:40:37,984 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:38,110 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve2/network HTTP/1.1" 200 78
+2025-10-24 19:40:40,111 - lazy_teacher.modules.network - INFO - reload_network:44 - Network reload completed on node 'pve2' in 2.1s
+2025-10-24 19:40:40,112 - lazy_teacher.modules.network - DEBUG - reload_network:48 - Network reload result: UPID:pve2:00006516:000D3482:68FB8FE6:srvreload:networking:root@pam:
+2025-10-24 19:40:40,112 - lazy_teacher.modules.network - INFO - log_operation:88 - Network reload successful - SUCCESS [node=pve2, duration=2.1272404193878174]
+2025-10-24 19:40:40,113 - lazy_teacher.modules.network - DEBUG - __exit__:126 - Completed: Reload network on pve2 (duration: 2.13s)
+2025-10-24 19:40:40,114 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:40:40,114 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Get Proxmox connection test
+2025-10-24 19:40:40,114 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:40:40,223 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 798
+2025-10-24 19:40:40,224 - lazy_teacher.modules.connections - INFO - get_proxmox_connection:341 - Proxmox connection established - conn: test, host: 192.168.122.201
+2025-10-24 19:40:40,225 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Get Proxmox connection test (duration: 0.11s)
+2025-10-24 19:40:40,225 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:40:40,237 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes HTTP/1.1" 200 965
+2025-10-24 19:40:40,265 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/network HTTP/1.1" 200 450
+2025-10-24 19:40:40,287 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve3/network HTTP/1.1" 200 13
+2025-10-24 19:40:40,288 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:40,327 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve3/network/vmbr1000 HTTP/1.1" 200 13
+2025-10-24 19:40:40,329 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:40,351 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/users HTTP/1.1" 200 13
+2025-10-24 19:40:40,353 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:40,369 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/pools HTTP/1.1" 200 13
+2025-10-24 19:40:40,371 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:40,398 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/access/acl HTTP/1.1" 200 13
+2025-10-24 19:40:40,400 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:40,420 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/nextid HTTP/1.1" 200 14
+2025-10-24 19:40:40,466 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve3/qemu/102/clone HTTP/1.1" 200 69
+2025-10-24 19:40:40,467 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for clone task UPID:pve3:000064AE:000D34A6:68FB8FE8:qmclone:102:root@pam:
+2025-10-24 19:40:40,468 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:40,504 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/tasks/UPID:pve3:000064AE:000D34A6:68FB8FE8:qmclone:102:root@pam:/status HTTP/1.1" 200 208
+2025-10-24 19:40:42,506 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:42,526 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/tasks/UPID:pve3:000064AE:000D34A6:68FB8FE8:qmclone:102:root@pam:/status HTTP/1.1" 200 208
+2025-10-24 19:40:44,528 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:44,547 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/tasks/UPID:pve3:000064AE:000D34A6:68FB8FE8:qmclone:102:root@pam:/status HTTP/1.1" 200 226
+2025-10-24 19:40:44,548 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Clone task completed successfully
+2025-10-24 19:40:44,548 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for clone task UPID:pve3:000064AE:000D34A6:68FB8FE8:qmclone:102:root@pam: (duration: 4.08s)
+2025-10-24 19:40:44,549 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:44,575 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve3/qemu/105/config HTTP/1.1" 200 13
+2025-10-24 19:40:44,577 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:44,604 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve3/qemu/105/config HTTP/1.1" 200 13
+2025-10-24 19:40:44,605 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:44,622 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/access/acl HTTP/1.1" 200 13
+2025-10-24 19:40:44,624 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:44,634 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/nextid HTTP/1.1" 200 14
+2025-10-24 19:40:44,659 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve3/qemu/102/clone HTTP/1.1" 200 69
+2025-10-24 19:40:44,661 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for clone task UPID:pve3:000064E1:000D364A:68FB8FEC:qmclone:102:root@pam:
+2025-10-24 19:40:44,661 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:44,681 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/tasks/UPID:pve3:000064E1:000D364A:68FB8FEC:qmclone:102:root@pam:/status HTTP/1.1" 200 208
+2025-10-24 19:40:46,683 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:46,701 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/tasks/UPID:pve3:000064E1:000D364A:68FB8FEC:qmclone:102:root@pam:/status HTTP/1.1" 200 226
+2025-10-24 19:40:46,702 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Clone task completed successfully
+2025-10-24 19:40:46,703 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for clone task UPID:pve3:000064E1:000D364A:68FB8FEC:qmclone:102:root@pam: (duration: 2.04s)
+2025-10-24 19:40:46,703 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:46,731 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve3/qemu/106/config HTTP/1.1" 200 13
+2025-10-24 19:40:46,733 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:46,748 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/access/acl HTTP/1.1" 200 13
+2025-10-24 19:40:46,750 - lazy_teacher.modules.network - DEBUG - __enter__:118 - Started: Reload network on pve3
+2025-10-24 19:40:46,750 - lazy_teacher.modules.network - INFO - reload_network:33 - Initiating network reload on node 'pve3' with 30s timeout
+2025-10-24 19:40:46,751 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:46,878 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve3/network HTTP/1.1" 200 78
+2025-10-24 19:40:48,880 - lazy_teacher.modules.network - INFO - reload_network:44 - Network reload completed on node 'pve3' in 2.1s
+2025-10-24 19:40:48,880 - lazy_teacher.modules.network - DEBUG - reload_network:48 - Network reload result: UPID:pve3:00006520:000D3728:68FB8FEE:srvreload:networking:root@pam:
+2025-10-24 19:40:48,881 - lazy_teacher.modules.network - INFO - log_operation:88 - Network reload successful - SUCCESS [node=pve3, duration=2.1287169456481934]
+2025-10-24 19:40:48,881 - lazy_teacher.modules.network - DEBUG - __exit__:126 - Completed: Reload network on pve3 (duration: 2.13s)
+2025-10-24 19:40:48,882 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:40:48,882 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Get Proxmox connection test
+2025-10-24 19:40:48,882 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:40:48,991 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 804
+2025-10-24 19:40:48,992 - lazy_teacher.modules.connections - INFO - get_proxmox_connection:341 - Proxmox connection established - conn: test, host: 192.168.122.201
+2025-10-24 19:40:48,993 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Get Proxmox connection test (duration: 0.11s)
+2025-10-24 19:40:48,993 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:40:49,006 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes HTTP/1.1" 200 965
+2025-10-24 19:40:49,031 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/network HTTP/1.1" 200 450
+2025-10-24 19:40:49,047 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve1/network HTTP/1.1" 200 13
+2025-10-24 19:40:49,048 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:49,078 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve1/network/vmbr1000 HTTP/1.1" 200 13
+2025-10-24 19:40:49,080 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:49,101 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/users HTTP/1.1" 200 13
+2025-10-24 19:40:49,103 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:49,119 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/pools HTTP/1.1" 200 13
+2025-10-24 19:40:49,121 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:49,138 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/access/acl HTTP/1.1" 200 13
+2025-10-24 19:40:49,139 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:49,150 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/nextid HTTP/1.1" 200 14
+2025-10-24 19:40:49,167 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve1/qemu/100/clone HTTP/1.1" 200 69
+2025-10-24 19:40:49,169 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for clone task UPID:pve1:00006E16:000D393B:68FB8FF1:qmclone:100:root@pam:
+2025-10-24 19:40:49,169 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:49,186 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006E16:000D393B:68FB8FF1:qmclone:100:root@pam:/status HTTP/1.1" 200 208
+2025-10-24 19:40:51,188 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:51,203 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006E16:000D393B:68FB8FF1:qmclone:100:root@pam:/status HTTP/1.1" 200 226
+2025-10-24 19:40:51,204 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Clone task completed successfully
+2025-10-24 19:40:51,204 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for clone task UPID:pve1:00006E16:000D393B:68FB8FF1:qmclone:100:root@pam: (duration: 2.04s)
+2025-10-24 19:40:51,205 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:51,226 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve1/qemu/107/config HTTP/1.1" 200 13
+2025-10-24 19:40:51,228 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:51,249 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve1/qemu/107/config HTTP/1.1" 200 13
+2025-10-24 19:40:51,251 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:51,268 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/access/acl HTTP/1.1" 200 13
+2025-10-24 19:40:51,269 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:51,281 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/nextid HTTP/1.1" 200 14
+2025-10-24 19:40:51,298 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/nodes/pve1/qemu/100/clone HTTP/1.1" 200 69
+2025-10-24 19:40:51,300 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for clone task UPID:pve1:00006E3D:000D3A10:68FB8FF3:qmclone:100:root@pam:
+2025-10-24 19:40:51,301 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:51,317 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006E3D:000D3A10:68FB8FF3:qmclone:100:root@pam:/status HTTP/1.1" 200 208
+2025-10-24 19:40:53,319 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:53,332 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006E3D:000D3A10:68FB8FF3:qmclone:100:root@pam:/status HTTP/1.1" 200 208
+2025-10-24 19:40:55,334 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:55,347 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00006E3D:000D3A10:68FB8FF3:qmclone:100:root@pam:/status HTTP/1.1" 200 226
+2025-10-24 19:40:55,348 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Clone task completed successfully
+2025-10-24 19:40:55,349 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for clone task UPID:pve1:00006E3D:000D3A10:68FB8FF3:qmclone:100:root@pam: (duration: 4.05s)
+2025-10-24 19:40:55,349 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:55,382 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve1/qemu/108/config HTTP/1.1" 200 13
+2025-10-24 19:40:55,383 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:55,401 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/access/acl HTTP/1.1" 200 13
+2025-10-24 19:40:55,403 - lazy_teacher.modules.network - DEBUG - __enter__:118 - Started: Reload network on pve1
+2025-10-24 19:40:55,403 - lazy_teacher.modules.network - INFO - reload_network:33 - Initiating network reload on node 'pve1' with 30s timeout
+2025-10-24 19:40:55,404 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:40:55,510 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve1/network HTTP/1.1" 200 78
+2025-10-24 19:40:57,512 - lazy_teacher.modules.network - INFO - reload_network:44 - Network reload completed on node 'pve1' in 2.1s
+2025-10-24 19:40:57,512 - lazy_teacher.modules.network - DEBUG - reload_network:48 - Network reload result: UPID:pve1:00006E81:000D3BB5:68FB8FF7:srvreload:networking:root@pam:
+2025-10-24 19:40:57,513 - lazy_teacher.modules.network - INFO - log_operation:88 - Network reload successful - SUCCESS [node=pve1, duration=2.1081628799438477]
+2025-10-24 19:40:57,513 - lazy_teacher.modules.network - DEBUG - __exit__:126 - Completed: Reload network on pve1 (duration: 2.11s)
+2025-10-24 19:52:36,624 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Select default connection
+2025-10-24 19:52:36,624 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:52:36,626 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Test connection test
+2025-10-24 19:52:36,667 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:52:36,789 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 811
+2025-10-24 19:52:36,791 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:52:36,802 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/cluster/resources HTTP/1.1" 200 930
+2025-10-24 19:52:36,803 - lazy_teacher.modules.connections - INFO - test_connection:103 - Connection test successful - conn: test, host: 192.168.122.201
+2025-10-24 19:52:36,804 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Test connection test (duration: 0.18s)
+2025-10-24 19:52:37,862 - lazy_teacher.modules.connections - INFO - select_default_connection:295 - Default connection selected - conn: test
+2025-10-24 19:52:37,862 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Select default connection (duration: 1.24s)
+2025-10-24 19:52:40,197 - lazy_teacher.modules.deletion - DEBUG - __enter__:118 - Started: Delete all user stands
+2025-10-24 19:52:41,142 - lazy_teacher.modules.deletion - INFO - delete_all_user_stands:313 - Starting deletion of 3 user stands from list 'test'
+2025-10-24 19:52:41,145 - lazy_teacher.modules.deletion - INFO - delete_user_stand_logic:240 - Starting stand deletion for user: user1@pve
+2025-10-24 19:52:41,146 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:52:41,146 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Get Proxmox connection test
+2025-10-24 19:52:41,146 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:52:41,264 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 804
+2025-10-24 19:52:41,265 - lazy_teacher.modules.connections - INFO - get_proxmox_connection:341 - Proxmox connection established - conn: test, host: 192.168.122.201
+2025-10-24 19:52:41,266 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Get Proxmox connection test (duration: 0.12s)
+2025-10-24 19:52:41,267 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:52:41,281 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/access/users HTTP/1.1" 200 294
+2025-10-24 19:52:41,282 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:41,293 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/pools HTTP/1.1" 200 67
+2025-10-24 19:52:41,297 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/pools/user1 HTTP/1.1" 200 517
+2025-10-24 19:52:41,297 - lazy_teacher.modules.deletion - INFO - delete_user_stand_logic:280 - Found 2 VMs to delete on nodes: {'pve2'}
+2025-10-24 19:52:41,310 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/qemu/103/config HTTP/1.1" 200 525
+2025-10-24 19:52:41,318 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/qemu/104/config HTTP/1.1" 200 486
+2025-10-24 19:52:41,322 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes HTTP/1.1" 200 966
+2025-10-24 19:52:41,335 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/qemu HTTP/1.1" 200 573
+2025-10-24 19:52:41,337 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:41,380 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/nodes/pve2/qemu/103?purge=1 HTTP/1.1" 200 71
+2025-10-24 19:52:41,381 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for generic task UPID:pve2:00006C9D:000E4F09:68FB92B9:qmdestroy:103:root@pam:
+2025-10-24 19:52:41,382 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:41,405 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/tasks/UPID:pve2:00006C9D:000E4F09:68FB92B9:qmdestroy:103:root@pam:/status HTTP/1.1" 200 212
+2025-10-24 19:52:43,407 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:43,426 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/tasks/UPID:pve2:00006C9D:000E4F09:68FB92B9:qmdestroy:103:root@pam:/status HTTP/1.1" 200 230
+2025-10-24 19:52:43,427 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Generic task completed successfully
+2025-10-24 19:52:43,428 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for generic task UPID:pve2:00006C9D:000E4F09:68FB92B9:qmdestroy:103:root@pam: (duration: 2.05s)
+2025-10-24 19:52:43,428 - lazy_teacher.modules.deletion - INFO - _delete_vms_from_pool:158 - VM 103 deleted from node pve2
+2025-10-24 19:52:43,429 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:43,449 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/qemu HTTP/1.1" 200 393
+2025-10-24 19:52:43,450 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:43,483 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/nodes/pve2/qemu/104?purge=1 HTTP/1.1" 200 71
+2025-10-24 19:52:43,484 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for generic task UPID:pve2:00006CBD:000E4FDB:68FB92BB:qmdestroy:104:root@pam:
+2025-10-24 19:52:43,485 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:43,508 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/tasks/UPID:pve2:00006CBD:000E4FDB:68FB92BB:qmdestroy:104:root@pam:/status HTTP/1.1" 200 212
+2025-10-24 19:52:45,510 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:45,530 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/tasks/UPID:pve2:00006CBD:000E4FDB:68FB92BB:qmdestroy:104:root@pam:/status HTTP/1.1" 200 230
+2025-10-24 19:52:45,532 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Generic task completed successfully
+2025-10-24 19:52:45,532 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for generic task UPID:pve2:00006CBD:000E4FDB:68FB92BB:qmdestroy:104:root@pam: (duration: 2.05s)
+2025-10-24 19:52:45,532 - lazy_teacher.modules.deletion - INFO - _delete_vms_from_pool:158 - VM 104 deleted from node pve2
+2025-10-24 19:52:45,533 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:45,554 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/pools/user1 HTTP/1.1" 200 13
+2025-10-24 19:52:45,555 - lazy_teacher.modules.deletion - INFO - _delete_pool_and_user:174 - Pool user1 deleted
+2025-10-24 19:52:45,556 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:45,586 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/access/users/user1@pve HTTP/1.1" 200 13
+2025-10-24 19:52:45,587 - lazy_teacher.modules.deletion - INFO - _delete_pool_and_user:181 - User user1@pve deleted
+2025-10-24 19:52:45,588 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:45,624 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/nodes/pve2/network/vmbr1000 HTTP/1.1" 200 13
+2025-10-24 19:52:45,625 - lazy_teacher.modules.deletion - INFO - _delete_bridges_and_reload_network:194 - Bridge vmbr1000 deleted from node pve2
+2025-10-24 19:52:45,626 - lazy_teacher.modules.network - DEBUG - __enter__:118 - Started: Reload network on pve2
+2025-10-24 19:52:45,627 - lazy_teacher.modules.network - INFO - reload_network:33 - Initiating network reload on node 'pve2' with 30s timeout
+2025-10-24 19:52:45,628 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:45,752 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve2/network HTTP/1.1" 200 78
+2025-10-24 19:52:47,753 - lazy_teacher.modules.network - INFO - reload_network:44 - Network reload completed on node 'pve2' in 2.1s
+2025-10-24 19:52:47,754 - lazy_teacher.modules.network - DEBUG - reload_network:48 - Network reload result: UPID:pve2:00006CCE:000E50BE:68FB92BD:srvreload:networking:root@pam:
+2025-10-24 19:52:47,754 - lazy_teacher.modules.network - INFO - log_operation:88 - Network reload successful - SUCCESS [node=pve2, duration=2.126051187515259]
+2025-10-24 19:52:47,755 - lazy_teacher.modules.network - DEBUG - __exit__:126 - Completed: Reload network on pve2 (duration: 2.13s)
+2025-10-24 19:52:47,755 - lazy_teacher.modules.deletion - INFO - _delete_bridges_and_reload_network:202 - Network reloaded on node pve2
+2025-10-24 19:52:47,756 - lazy_teacher.modules.deletion - INFO - log_operation:88 - User stand deletion completed - SUCCESS [user=user1@pve, pool_name=user1, vms_deleted=2, bridges_deleted=1, nodes_reloaded=1]
+2025-10-24 19:52:47,757 - lazy_teacher.modules.deletion - INFO - delete_user_stand_logic:240 - Starting stand deletion for user: user2@pve
+2025-10-24 19:52:47,758 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:52:47,758 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Get Proxmox connection test
+2025-10-24 19:52:47,759 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:52:47,875 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 804
+2025-10-24 19:52:47,877 - lazy_teacher.modules.connections - INFO - get_proxmox_connection:341 - Proxmox connection established - conn: test, host: 192.168.122.201
+2025-10-24 19:52:47,878 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Get Proxmox connection test (duration: 0.12s)
+2025-10-24 19:52:47,878 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:52:47,893 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/access/users HTTP/1.1" 200 230
+2025-10-24 19:52:47,895 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:47,904 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/pools HTTP/1.1" 200 48
+2025-10-24 19:52:47,907 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/pools/user2 HTTP/1.1" 200 517
+2025-10-24 19:52:47,907 - lazy_teacher.modules.deletion - INFO - delete_user_stand_logic:280 - Found 2 VMs to delete on nodes: {'pve3'}
+2025-10-24 19:52:47,919 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/qemu/105/config HTTP/1.1" 200 525
+2025-10-24 19:52:47,924 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/qemu/106/config HTTP/1.1" 200 486
+2025-10-24 19:52:47,927 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes HTTP/1.1" 200 965
+2025-10-24 19:52:47,938 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/qemu HTTP/1.1" 200 213
+2025-10-24 19:52:47,940 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:47,958 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/qemu HTTP/1.1" 200 573
+2025-10-24 19:52:47,959 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:47,990 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/nodes/pve3/qemu/105?purge=1 HTTP/1.1" 200 71
+2025-10-24 19:52:47,991 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for generic task UPID:pve3:00006CA9:000E50D7:68FB92BF:qmdestroy:105:root@pam:
+2025-10-24 19:52:47,991 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:48,012 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/tasks/UPID:pve3:00006CA9:000E50D7:68FB92BF:qmdestroy:105:root@pam:/status HTTP/1.1" 200 212
+2025-10-24 19:52:50,013 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:50,033 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/tasks/UPID:pve3:00006CA9:000E50D7:68FB92BF:qmdestroy:105:root@pam:/status HTTP/1.1" 200 230
+2025-10-24 19:52:50,034 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Generic task completed successfully
+2025-10-24 19:52:50,036 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for generic task UPID:pve3:00006CA9:000E50D7:68FB92BF:qmdestroy:105:root@pam: (duration: 2.04s)
+2025-10-24 19:52:50,036 - lazy_teacher.modules.deletion - INFO - _delete_vms_from_pool:158 - VM 105 deleted from node pve3
+2025-10-24 19:52:50,037 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:50,057 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/qemu HTTP/1.1" 200 213
+2025-10-24 19:52:50,059 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:50,077 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/qemu HTTP/1.1" 200 393
+2025-10-24 19:52:50,078 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:50,108 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/nodes/pve3/qemu/106?purge=1 HTTP/1.1" 200 71
+2025-10-24 19:52:50,110 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for generic task UPID:pve3:00006CB4:000E51AB:68FB92C2:qmdestroy:106:root@pam:
+2025-10-24 19:52:50,111 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:50,132 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/tasks/UPID:pve3:00006CB4:000E51AB:68FB92C2:qmdestroy:106:root@pam:/status HTTP/1.1" 200 212
+2025-10-24 19:52:52,133 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:52,153 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/tasks/UPID:pve3:00006CB4:000E51AB:68FB92C2:qmdestroy:106:root@pam:/status HTTP/1.1" 200 230
+2025-10-24 19:52:52,154 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Generic task completed successfully
+2025-10-24 19:52:52,155 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for generic task UPID:pve3:00006CB4:000E51AB:68FB92C2:qmdestroy:106:root@pam: (duration: 2.05s)
+2025-10-24 19:52:52,155 - lazy_teacher.modules.deletion - INFO - _delete_vms_from_pool:158 - VM 106 deleted from node pve3
+2025-10-24 19:52:52,156 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:52,175 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/pools/user2 HTTP/1.1" 200 13
+2025-10-24 19:52:52,176 - lazy_teacher.modules.deletion - INFO - _delete_pool_and_user:174 - Pool user2 deleted
+2025-10-24 19:52:52,178 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:52,205 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/access/users/user2@pve HTTP/1.1" 200 13
+2025-10-24 19:52:52,206 - lazy_teacher.modules.deletion - INFO - _delete_pool_and_user:181 - User user2@pve deleted
+2025-10-24 19:52:52,207 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:52,240 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/nodes/pve3/network/vmbr1000 HTTP/1.1" 200 13
+2025-10-24 19:52:52,242 - lazy_teacher.modules.deletion - INFO - _delete_bridges_and_reload_network:194 - Bridge vmbr1000 deleted from node pve3
+2025-10-24 19:52:52,242 - lazy_teacher.modules.network - DEBUG - __enter__:118 - Started: Reload network on pve3
+2025-10-24 19:52:52,242 - lazy_teacher.modules.network - INFO - reload_network:33 - Initiating network reload on node 'pve3' with 30s timeout
+2025-10-24 19:52:52,243 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:52,364 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve3/network HTTP/1.1" 200 78
+2025-10-24 19:52:54,366 - lazy_teacher.modules.network - INFO - reload_network:44 - Network reload completed on node 'pve3' in 2.1s
+2025-10-24 19:52:54,367 - lazy_teacher.modules.network - DEBUG - reload_network:48 - Network reload result: UPID:pve3:00006CC5:000E528C:68FB92C4:srvreload:networking:root@pam:
+2025-10-24 19:52:54,367 - lazy_teacher.modules.network - INFO - log_operation:88 - Network reload successful - SUCCESS [node=pve3, duration=2.1230390071868896]
+2025-10-24 19:52:54,368 - lazy_teacher.modules.network - DEBUG - __exit__:126 - Completed: Reload network on pve3 (duration: 2.13s)
+2025-10-24 19:52:54,368 - lazy_teacher.modules.deletion - INFO - _delete_bridges_and_reload_network:202 - Network reloaded on node pve3
+2025-10-24 19:52:54,368 - lazy_teacher.modules.deletion - INFO - log_operation:88 - User stand deletion completed - SUCCESS [user=user2@pve, pool_name=user2, vms_deleted=2, bridges_deleted=1, nodes_reloaded=1]
+2025-10-24 19:52:54,370 - lazy_teacher.modules.deletion - INFO - delete_user_stand_logic:240 - Starting stand deletion for user: user3@pve
+2025-10-24 19:52:54,371 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:52:54,371 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Get Proxmox connection test
+2025-10-24 19:52:54,372 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:52:54,491 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 803
+2025-10-24 19:52:54,492 - lazy_teacher.modules.connections - INFO - get_proxmox_connection:341 - Proxmox connection established - conn: test, host: 192.168.122.201
+2025-10-24 19:52:54,493 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Get Proxmox connection test (duration: 0.12s)
+2025-10-24 19:52:54,494 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:52:54,509 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/access/users HTTP/1.1" 200 166
+2025-10-24 19:52:54,510 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:54,520 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/pools HTTP/1.1" 200 29
+2025-10-24 19:52:54,522 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/pools/user3 HTTP/1.1" 200 517
+2025-10-24 19:52:54,522 - lazy_teacher.modules.deletion - INFO - delete_user_stand_logic:280 - Found 2 VMs to delete on nodes: {'pve1'}
+2025-10-24 19:52:54,526 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/qemu/107/config HTTP/1.1" 200 525
+2025-10-24 19:52:54,528 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/qemu/108/config HTTP/1.1" 200 486
+2025-10-24 19:52:54,531 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes HTTP/1.1" 200 966
+2025-10-24 19:52:54,543 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/qemu HTTP/1.1" 200 213
+2025-10-24 19:52:54,545 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:54,563 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/qemu HTTP/1.1" 200 213
+2025-10-24 19:52:54,565 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:54,579 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/qemu HTTP/1.1" 200 564
+2025-10-24 19:52:54,580 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:54,605 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/nodes/pve1/qemu/107?purge=1 HTTP/1.1" 200 71
+2025-10-24 19:52:54,606 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for generic task UPID:pve1:0000762B:000E549B:68FB92C6:qmdestroy:107:root@pam:
+2025-10-24 19:52:54,607 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:54,622 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:0000762B:000E549B:68FB92C6:qmdestroy:107:root@pam:/status HTTP/1.1" 200 212
+2025-10-24 19:52:56,624 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:56,636 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:0000762B:000E549B:68FB92C6:qmdestroy:107:root@pam:/status HTTP/1.1" 200 230
+2025-10-24 19:52:56,637 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Generic task completed successfully
+2025-10-24 19:52:56,638 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for generic task UPID:pve1:0000762B:000E549B:68FB92C6:qmdestroy:107:root@pam: (duration: 2.03s)
+2025-10-24 19:52:56,638 - lazy_teacher.modules.deletion - INFO - _delete_vms_from_pool:158 - VM 107 deleted from node pve1
+2025-10-24 19:52:56,639 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:56,658 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve2/qemu HTTP/1.1" 200 213
+2025-10-24 19:52:56,659 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:56,680 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve3/qemu HTTP/1.1" 200 213
+2025-10-24 19:52:56,681 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:56,695 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/qemu HTTP/1.1" 200 384
+2025-10-24 19:52:56,697 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:56,723 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/nodes/pve1/qemu/108?purge=1 HTTP/1.1" 200 71
+2025-10-24 19:52:56,724 - lazy_teacher.modules.tasks - DEBUG - __enter__:118 - Started: Waiting for generic task UPID:pve1:00007638:000E556E:68FB92C8:qmdestroy:108:root@pam:
+2025-10-24 19:52:56,725 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:56,741 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00007638:000E556E:68FB92C8:qmdestroy:108:root@pam:/status HTTP/1.1" 200 212
+2025-10-24 19:52:58,742 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:58,756 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes/pve1/tasks/UPID:pve1:00007638:000E556E:68FB92C8:qmdestroy:108:root@pam:/status HTTP/1.1" 200 230
+2025-10-24 19:52:58,757 - lazy_teacher.modules.tasks - INFO - wait_for_task:53 - Generic task completed successfully
+2025-10-24 19:52:58,757 - lazy_teacher.modules.tasks - DEBUG - __exit__:126 - Completed: Waiting for generic task UPID:pve1:00007638:000E556E:68FB92C8:qmdestroy:108:root@pam: (duration: 2.03s)
+2025-10-24 19:52:58,758 - lazy_teacher.modules.deletion - INFO - _delete_vms_from_pool:158 - VM 108 deleted from node pve1
+2025-10-24 19:52:58,758 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:58,775 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/pools/user3 HTTP/1.1" 200 13
+2025-10-24 19:52:58,776 - lazy_teacher.modules.deletion - INFO - _delete_pool_and_user:174 - Pool user3 deleted
+2025-10-24 19:52:58,777 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:58,802 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/access/users/user3@pve HTTP/1.1" 200 13
+2025-10-24 19:52:58,803 - lazy_teacher.modules.deletion - INFO - _delete_pool_and_user:181 - User user3@pve deleted
+2025-10-24 19:52:58,805 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:58,830 - DEBUG - https://192.168.122.201:8006 "DELETE /api2/json/nodes/pve1/network/vmbr1000 HTTP/1.1" 200 13
+2025-10-24 19:52:58,831 - lazy_teacher.modules.deletion - INFO - _delete_bridges_and_reload_network:194 - Bridge vmbr1000 deleted from node pve1
+2025-10-24 19:52:58,832 - lazy_teacher.modules.network - DEBUG - __enter__:118 - Started: Reload network on pve1
+2025-10-24 19:52:58,832 - lazy_teacher.modules.network - INFO - reload_network:33 - Initiating network reload on node 'pve1' with 30s timeout
+2025-10-24 19:52:58,833 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:52:58,945 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve1/network HTTP/1.1" 200 78
+2025-10-24 19:53:00,947 - lazy_teacher.modules.network - INFO - reload_network:44 - Network reload completed on node 'pve1' in 2.1s
+2025-10-24 19:53:00,948 - lazy_teacher.modules.network - DEBUG - reload_network:48 - Network reload result: UPID:pve1:00007647:000E564D:68FB92CA:srvreload:networking:root@pam:
+2025-10-24 19:53:00,948 - lazy_teacher.modules.network - INFO - log_operation:88 - Network reload successful - SUCCESS [node=pve1, duration=2.1145212650299072]
+2025-10-24 19:53:00,948 - lazy_teacher.modules.network - DEBUG - __exit__:126 - Completed: Reload network on pve1 (duration: 2.12s)
+2025-10-24 19:53:00,948 - lazy_teacher.modules.deletion - INFO - _delete_bridges_and_reload_network:202 - Network reloaded on node pve1
+2025-10-24 19:53:00,949 - lazy_teacher.modules.deletion - INFO - log_operation:88 - User stand deletion completed - SUCCESS [user=user3@pve, pool_name=user3, vms_deleted=2, bridges_deleted=1, nodes_reloaded=1]
+2025-10-24 19:53:00,951 - lazy_teacher.modules.connections - DEBUG - _load_config:27 - Loaded 1 connections from config file config/proxmox_config.yaml
+2025-10-24 19:53:00,951 - lazy_teacher.modules.connections - DEBUG - __enter__:118 - Started: Get Proxmox connection test
+2025-10-24 19:53:00,951 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:53:01,070 - DEBUG - https://192.168.122.201:8006 "POST /api2/json/access/ticket HTTP/1.1" 200 807
+2025-10-24 19:53:01,071 - lazy_teacher.modules.connections - INFO - get_proxmox_connection:341 - Proxmox connection established - conn: test, host: 192.168.122.201
+2025-10-24 19:53:01,072 - lazy_teacher.modules.connections - DEBUG - __exit__:126 - Completed: Get Proxmox connection test (duration: 0.12s)
+2025-10-24 19:53:01,072 - DEBUG - Starting new HTTPS connection (1): 192.168.122.201:8006
+2025-10-24 19:53:01,092 - DEBUG - https://192.168.122.201:8006 "GET /api2/json/nodes HTTP/1.1" 200 965
+2025-10-24 19:53:01,092 - lazy_teacher.modules.deletion - INFO - delete_all_user_stands:346 - Performing final network reload on 3 nodes
+2025-10-24 19:53:01,093 - lazy_teacher.modules.network - DEBUG - __enter__:118 - Started: Reload network on pve2
+2025-10-24 19:53:01,093 - lazy_teacher.modules.network - INFO - reload_network:33 - Initiating network reload on node 'pve2' with 30s timeout
+2025-10-24 19:53:01,212 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve2/network HTTP/1.1" 200 78
+2025-10-24 19:53:03,214 - lazy_teacher.modules.network - INFO - reload_network:44 - Network reload completed on node 'pve2' in 2.1s
+2025-10-24 19:53:03,215 - lazy_teacher.modules.network - DEBUG - reload_network:48 - Network reload result: UPID:pve2:00006D11:000E56C8:68FB92CD:srvreload:networking:root@pam:
+2025-10-24 19:53:03,215 - lazy_teacher.modules.network - INFO - log_operation:88 - Network reload successful - SUCCESS [node=pve2, duration=2.1198062896728516]
+2025-10-24 19:53:03,215 - lazy_teacher.modules.network - DEBUG - __exit__:126 - Completed: Reload network on pve2 (duration: 2.12s)
+2025-10-24 19:53:03,215 - lazy_teacher.modules.deletion - DEBUG - delete_all_user_stands:350 - Final network reload completed on pve2
+2025-10-24 19:53:03,215 - lazy_teacher.modules.network - DEBUG - __enter__:118 - Started: Reload network on pve3
+2025-10-24 19:53:03,215 - lazy_teacher.modules.network - INFO - reload_network:33 - Initiating network reload on node 'pve3' with 30s timeout
+2025-10-24 19:53:03,216 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:53:03,339 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve3/network HTTP/1.1" 200 78
+2025-10-24 19:53:05,340 - lazy_teacher.modules.network - INFO - reload_network:44 - Network reload completed on node 'pve3' in 2.1s
+2025-10-24 19:53:05,341 - lazy_teacher.modules.network - DEBUG - reload_network:48 - Network reload result: UPID:pve3:00006D08:000E56D5:68FB92CF:srvreload:networking:root@pam:
+2025-10-24 19:53:05,341 - lazy_teacher.modules.network - INFO - log_operation:88 - Network reload successful - SUCCESS [node=pve3, duration=2.1237869262695312]
+2025-10-24 19:53:05,341 - lazy_teacher.modules.network - DEBUG - __exit__:126 - Completed: Reload network on pve3 (duration: 2.13s)
+2025-10-24 19:53:05,341 - lazy_teacher.modules.deletion - DEBUG - delete_all_user_stands:350 - Final network reload completed on pve3
+2025-10-24 19:53:05,341 - lazy_teacher.modules.network - DEBUG - __enter__:118 - Started: Reload network on pve1
+2025-10-24 19:53:05,341 - lazy_teacher.modules.network - INFO - reload_network:33 - Initiating network reload on node 'pve1' with 30s timeout
+2025-10-24 19:53:05,342 - DEBUG - Resetting dropped connection: 192.168.122.201
+2025-10-24 19:53:05,452 - DEBUG - https://192.168.122.201:8006 "PUT /api2/json/nodes/pve1/network HTTP/1.1" 200 78
+2025-10-24 19:53:07,454 - lazy_teacher.modules.network - INFO - reload_network:44 - Network reload completed on node 'pve1' in 2.1s
+2025-10-24 19:53:07,454 - lazy_teacher.modules.network - DEBUG - reload_network:48 - Network reload result: UPID:pve1:0000768D:000E58D7:68FB92D1:srvreload:networking:root@pam:
+2025-10-24 19:53:07,454 - lazy_teacher.modules.network - INFO - log_operation:88 - Network reload successful - SUCCESS [node=pve1, duration=2.1116976737976074]
+2025-10-24 19:53:07,455 - lazy_teacher.modules.network - DEBUG - __exit__:126 - Completed: Reload network on pve1 (duration: 2.11s)
+2025-10-24 19:53:07,455 - lazy_teacher.modules.deletion - DEBUG - delete_all_user_stands:350 - Final network reload completed on pve1
+2025-10-24 19:53:07,456 - lazy_teacher.modules.deletion - INFO - log_operation:88 - Bulk stand deletion completed - SUCCESS [total_users=3, deleted_count=3, failed_count=0]
+2025-10-24 19:53:11,925 - lazy_teacher.modules.deletion - DEBUG - __exit__:126 - Completed: Delete all user stands (duration: 31.73s)
