@@ -30,7 +30,7 @@ def deploy_stand_local(stand_config=None, users_list=None, target_node=None, upd
 
     # Use provided configs if available, otherwise select interactively
     if stand_config is None:
-        stand = select_stand_config()
+        stand, _ = select_stand_config()
         if clone_type is None:
             clone_type = select_clone_type()
     else:
