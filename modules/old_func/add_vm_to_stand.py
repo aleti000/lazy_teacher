@@ -1,5 +1,5 @@
 from .shared import *
-from .test_connection import test_connection as test_conn_func
+from .connections import test_connection as test_conn_func
 
 from modules import *
 def add_vm_to_stand(stand, conn_name):

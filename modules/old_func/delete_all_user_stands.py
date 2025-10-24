@@ -1,7 +1,7 @@
 import yaml
 from pathlib import Path
 from . import shared
-from .proxmox_connection import get_proxmox_connection
+from .connections import get_proxmox_connection
 from .delete_user_stand_logic import delete_user_stand_logic as delete_logic_func
 from .reload_network import reload_network as reload_net_func
 

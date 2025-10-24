@@ -1,9 +1,9 @@
 import yaml
 from pathlib import Path
 from . import shared
-from .proxmox_connection import get_proxmox_connection
-from .reload_network import reload_network as reload_net_func
-from .wait_for_clone_task import wait_for_clone_task as wait_clone_func
+from .connections import get_proxmox_connection
+from .network import reload_network as reload_net_func
+from .tasks import wait_for_clone_task as wait_clone_func
 
 from modules import *
 
@@ -28,44 +28,8 @@ def deploy_stand_local(stand_config=None, users_list=None, target_node=None, upd
             print(f"Ошибка получения следующего VMID: {e}")
             return None
 
-    def select_clone_type():
-        """Select clone type."""
-        print("Выберите тип клонирования:")
-        print("1. Полное клонирование (full)")
-        print("2. Связанное клонирование (linked)")
-
-        choice = input("Выбор: ").strip()
-        return 1 if choice == '1' else 0
-
     # Use provided configs if available, otherwise select interactively
     if stand_config is None:
-        def select_stand_config():
-            """Select stand configuration file."""
-            import glob
-            pattern = str(CONFIG_DIR / "*_stand.yaml")
-            files = glob.glob(pattern)
-            if not files:
-                print("Нет конфигураций стендов.")
-                return None
-
-            print("Выберите конфигурацию стенда:")
-            stands = []
-            for file in files:
-                stand_name = Path(file).stem.replace('_stand', '')
-                stands.append((stand_name, file))
-
-            for i, (name, _) in enumerate(stands, 1):
-                print(f"{i}. {name}")
-
-            try:
-                choice = int(input("Номер: ")) - 1
-                if 0 <= choice < len(stands):
-                    name, file = stands[choice]
-                    with open(file, 'r', encoding='utf-8') as f:
-                        return yaml.safe_load(f)
-            except (ValueError, FileNotFoundError):
-                pass
-            return None
         stand = select_stand_config()
         if clone_type is None:
             clone_type = select_clone_type()
@@ -73,34 +37,6 @@ def deploy_stand_local(stand_config=None, users_list=None, target_node=None, upd
         stand = stand_config
 
     if users_list is None:
-        def select_user_list():
-            """Select user list file."""
-            import glob
-            pattern = str(CONFIG_DIR / "*_list.yaml")
-            files = glob.glob(pattern)
-            if not files:
-                print("Нет списков пользователей.")
-                return None
-
-            print("Выберите список пользователей:")
-            lists = []
-            for file in files:
-                list_name = Path(file).stem.replace('_list', '')
-                lists.append((list_name, file))
-
-            for i, (name, _) in enumerate(lists, 1):
-                print(f"{i}. {name}")
-
-            try:
-                choice = int(input("Номер: ")) - 1
-                if 0 <= choice < len(lists):
-                    name, file = lists[choice]
-                    with open(file, 'r', encoding='utf-8') as f:
-                        data = yaml.safe_load(f) or {}
-                    return data.get('users', [])
-            except (ValueError, FileNotFoundError):
-                pass
-            return None
         users = select_user_list()
     else:
         users = users_list

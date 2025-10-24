@@ -3,10 +3,11 @@ import yaml
 import yaml
 from pathlib import Path
 from . import shared
-from .proxmox_connection import get_proxmox_connection
+from .connections import get_proxmox_connection
 from .sync_templates import sync_templates as sync_templates_func
-from .wait_for_clone_task import wait_for_clone_task as wait_clone_func
+from .tasks import wait_for_clone_task as wait_clone_func
 
+from .ui_menus import select_stand_config, select_user_list, select_clone_type
 from modules import *
 
 # Make shared constants available
@@ -19,70 +20,6 @@ def deploy_stand_distributed():
     import glob
     import random
     import string
-
-    def select_clone_type():
-        """Select clone type."""
-        print("Выберите тип клонирования:")
-        print("1. Полное клонирование (full)")
-        print("2. Связанное клонирование (linked)")
-
-        choice = input("Выбор: ").strip()
-        return 1 if choice == '1' else 0
-
-    def select_stand_config():
-        """Select stand configuration file."""
-        pattern = str(CONFIG_DIR / "*_stand.yaml")
-        files = glob.glob(pattern)
-        if not files:
-            print("Нет конфигураций стендов.")
-            return None
-
-        print("Выберите конфигурацию стенда:")
-        stands = []
-        for file in files:
-            stand_name = Path(file).stem.replace('_stand', '')
-            stands.append((stand_name, file))
-
-        for i, (name, _) in enumerate(stands, 1):
-            print(f"{i}. {name}")
-
-        try:
-            choice = int(input("Номер: ")) - 1
-            if 0 <= choice < len(stands):
-                name, file = stands[choice]
-                with open(file, 'r', encoding='utf-8') as f:
-                    return yaml.safe_load(f), file  # Return stand and file path for saving
-        except (ValueError, FileNotFoundError):
-            pass
-        return None, None
-
-    def select_user_list():
-        """Select user list file."""
-        pattern = str(CONFIG_DIR / "*_list.yaml")
-        files = glob.glob(pattern)
-        if not files:
-            print("Нет списков пользователей.")
-            return None
-
-        print("Выберите список пользователей:")
-        lists = []
-        for file in files:
-            list_name = Path(file).stem.replace('_list', '')
-            lists.append((list_name, file))
-
-        for i, (name, _) in enumerate(lists, 1):
-            print(f"{i}. {name}")
-
-        try:
-            choice = int(input("Номер: ")) - 1
-            if 0 <= choice < len(lists):
-                name, file = lists[choice]
-                with open(file, 'r', encoding='utf-8') as f:
-                    data = yaml.safe_load(f) or {}
-                return data.get('users', [])
-        except (ValueError, FileNotFoundError):
-            pass
-        return None
 
     stand, stand_file_path = select_stand_config()
     if not stand:

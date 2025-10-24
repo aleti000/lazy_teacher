@@ -1,37 +1,12 @@
 
 # Import all functions to make them available in the namespace
-from .main_menu import main_menu
-from .config_menu import config_menu
-from .connection_menu import connection_menu
-from .display_connections import display_connections
-from .create_connection import create_connection
-from .delete_connection import delete_connection
-from .user_menu import user_menu
-from .input_users_manual import input_users_manual
-from .import_users import import_users
-from .display_user_lists import display_user_lists
-from .delete_user_list import delete_user_list
-from .stand_menu import stand_menu
-from .create_stand_menu import create_stand_menu
-from .add_vm_to_stand import add_vm_to_stand
-from .remove_vm_from_stand import remove_vm_from_stand
-from .display_stand_vms import display_stand_vms
-from .save_stand import save_stand
-from .wait_for_clone_task import wait_for_clone_task
-from .wait_for_template_task import wait_for_template_task
-from .wait_for_migration_task import wait_for_migration_task
+from .ui_menus import main_menu, config_menu, connection_menu, user_menu, stand_menu, create_stand_menu, deploy_stand_menu, delete_stand_menu, select_clone_type, select_stand_config, select_user_list
+from .connections import create_connection, delete_connection, display_connections, test_connection, select_default_connection, get_proxmox_connection
+from .users import input_users_manual, import_users, display_user_lists, delete_user_list
+from .stands import add_vm_to_stand, remove_vm_from_stand, display_stand_vms, save_stand, delete_stand_file, display_list_of_stands
+from .deletion import delete_user_stand, delete_user_stand_logic, delete_all_user_stands
+from .tasks import wait_for_clone_task, wait_for_template_task, wait_for_migration_task, wait_for_task
 from .sync_templates import sync_templates
-from .reload_network import reload_network
+from .network import reload_network
 from .deploy_stand_local import deploy_stand_local
 from .deploy_stand_distributed import deploy_stand_distributed
-from .deploy_stand_menu import deploy_stand_menu
-from .delete_stand_menu import delete_stand_menu
-from .delete_stand_file import delete_stand_file
-from .display_list_of_stands import display_list_of_stands
-from .test_connection import test_connection
-from .select_default_connection import select_default_connection
-from .delete_user_stand import delete_user_stand
-from .wait_for_task import wait_for_task
-from .delete_user_stand_logic import delete_user_stand_logic
-from .delete_all_user_stands import delete_all_user_stands
-from .proxmox_connection import get_proxmox_connection

@@ -1,5 +1,5 @@
 from . import shared
-from .proxmox_connection import get_proxmox_connection
+from .connections import get_proxmox_connection
 from .wait_for_task import wait_for_task as wait_task_func
 from .reload_network import reload_network as reload_net_func
 

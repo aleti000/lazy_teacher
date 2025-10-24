@@ -1,8 +1,6 @@
 
 from . import shared
-from .wait_for_clone_task import wait_for_clone_task as wait_clone_func
-from .wait_for_template_task import wait_for_template_task as wait_template_func
-from .wait_for_migration_task import wait_for_migration_task as wait_migration_func
+from .tasks import wait_for_clone_task as wait_clone_func, wait_for_template_task as wait_template_func, wait_for_migration_task as wait_migration_func
 
 from modules import *
 
