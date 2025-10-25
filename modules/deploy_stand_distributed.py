@@ -15,23 +15,33 @@ CONFIG_DIR = shared.CONFIG_DIR
 DEFAULT_CONN = shared.DEFAULT_CONN
 console = shared.console
 logger = shared.logger
-def deploy_stand_distributed():
+def deploy_stand_distributed(stand_config=None, users_list=None, clone_type=None, return_results=False):
     """Deploy stand with even distribution of users across nodes."""
     import glob
     import random
     import string
 
-    stand, stand_file_path = select_stand_config()
-    if not stand:
-        input("Нажмите Enter для продолжения...")
-        return
+    # If parameters provided from demo_exam, use them; otherwise select interactively
+    if stand_config is None:
+        result = select_stand_config()
+        if result is None:
+            input("Нажмите Enter для продолжения...")
+            return None if return_results else None
+        stand, stand_file_path = result
+    else:
+        stand = stand_config
+        stand_file_path = None  # Won't save if externally provided
 
-    users = select_user_list()
-    if not users:
-        input("Нажмите Enter для продолжения...")
-        return
+    if users_list is None:
+        users = select_user_list()
+        if not users:
+            input("Нажмите Enter для продолжения...")
+            return None if return_results else None
+    else:
+        users = users_list
 
-    clone_type = select_clone_type()
+    if clone_type is None:
+        clone_type = select_clone_type()
 
     # Get Proxmox connection
     try:
@@ -93,4 +103,8 @@ def deploy_stand_distributed():
         console.print(table)
     else:
         console.print("[red]Нет результатов развертывания.[/red]")
-    input("Нажмите Enter для продолжения...")
+
+    if return_results:
+        return all_deployment_results
+    else:
+        input("Нажмите Enter для продолжения...")

@@ -138,30 +138,6 @@ def _collect_bridges_to_delete(prox, members: List[Dict[str, Any]]) -> Set[Tuple
 
     return bridges_to_delete
 
-def _delete_snapshots_from_vms(prox, members: List[Dict[str, Any]]) -> None:
-    """Delete snapshots from VMs before VM deletion."""
-    for member in members:
-        vmid = member.get('vmid')
-        member_node = member.get('node')
-        if not vmid or not member_node:
-            continue
-
-        try:
-            snapshots = prox.nodes(member_node).qemu(vmid).snapshot.get()
-            for snapshot in snapshots:
-                snap_name = snapshot.get('name')
-                if snap_name == 'start':  # Delete only 'start' snapshot
-                    try:
-                        task_id = prox.nodes(member_node).qemu(vmid).snapshot(snap_name).delete()
-                        if task_id and wait_task_func(prox, member_node, task_id):
-                            logger.info(f"Snapshot '{snap_name}' deleted from VM {vmid}")
-                        else:
-                            logger.warning(f"Failed to delete snapshot '{snap_name}' from VM {vmid}: task failed")
-                    except Exception as e:
-                        logger.warning(f"Failed to delete snapshot '{snap_name}' from VM {vmid}: {e}")
-        except Exception as e:
-            logger.warning(f"Failed to get snapshots for VM {vmid}: {e}")
-
 def _delete_vms_from_pool(prox, members: List[Dict[str, Any]]) -> List[int]:
     """Delete VMs from pool and return successfully deleted VMIDs."""
     deleted_vmids = []
@@ -305,9 +281,6 @@ def delete_user_stand_logic(user: str) -> bool:
 
     # Collect bridges to delete before VM removal
     bridges_to_delete = _collect_bridges_to_delete(prox, members)
-
-    # Delete snapshots from VMs
-    _delete_snapshots_from_vms(prox, members)
 
     # Delete VMs
     deleted_vmids = _delete_vms_from_pool(prox, members)

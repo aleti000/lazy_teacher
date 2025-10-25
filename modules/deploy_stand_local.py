@@ -3,7 +3,7 @@ from pathlib import Path
 from . import shared
 from .connections import get_proxmox_connection
 from .network import reload_network as reload_net_func
-from .tasks import wait_for_clone_task as wait_clone_func, wait_for_task
+from .tasks import wait_for_clone_task as wait_clone_func
 
 from modules import *
 
@@ -262,17 +262,6 @@ def deploy_stand_local(stand_config=None, users_list=None, target_node=None, upd
             logger.error(f"Ошибка назначения прав на VM: {e}")
             return False
 
-    def create_vm_snapshot(proxmox, node, vmid, snapname="start"):
-        """Create snapshot for VM with given name."""
-        try:
-            result = proxmox.nodes(node).qemu(vmid).snapshot.post(
-                snapname=snapname
-            )
-            return result
-        except Exception as e:
-            logger.error(f"Ошибка создания snapshot '{snapname}' для VM {vmid}: {e}")
-            return None
-
     # Main deployment logic
     if not stand:
         shared.console.print("[red]Не выбран стенд.[/red]")
@@ -357,11 +346,6 @@ def deploy_stand_local(stand_config=None, users_list=None, target_node=None, upd
 
                 # Assign VM permissions
                 assign_vm_permissions(prox, new_vmid, username)
-
-                # Create snapshot
-                snap_result = create_vm_snapshot(prox, node, new_vmid)
-                if snap_result:
-                    wait_for_task(prox, node, snap_result, "snapshot")
 
         shared.console.print(f"[green]Стенд {username} создан[/green]")
 
