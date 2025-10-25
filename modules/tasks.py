@@ -94,6 +94,10 @@ def wait_for_migration_task(proxmox, node, task_id, timeout=1200):
     """Wait for migration task to complete (legacy function)."""
     return wait_for_task(proxmox, node, task_id, "migration", timeout, 5.0, True)
 
+def wait_for_snapshot_task(proxmox, node, task_id, timeout=300):
+    """Wait for snapshot task to complete (create or delete)."""
+    return wait_for_task(proxmox, node, task_id, "snapshot", timeout, 2.0, True)
+
 def wait_for_template_task(proxmox, node, task_id, timeout=600):
     """Wait for template task to complete (legacy function)."""
     return wait_for_task(proxmox, node, task_id, "template", timeout, 2.0, True)
