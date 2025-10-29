@@ -14,11 +14,13 @@ from . import shared
 from .logger import get_logger, OperationTimer
 from rich.panel import Panel
 from rich.table import Table
+import questionary
 
 from .connections import create_connection, delete_connection, display_connections
 from .users import input_users_manual, import_users, display_user_lists, delete_user_list
 from .stands import add_vm_to_stand, remove_vm_from_stand, display_stand_vms, save_stand, delete_stand_file, display_list_of_stands
 from .deletion import delete_user_stand, delete_all_user_stands
+from .active_users import manage_active_users
 
 logger = get_logger(__name__)
 
@@ -128,138 +130,111 @@ def select_from_config_files(pattern: str, suffix: str, title: str) -> Optional[
 
 
 def main_menu():
-    """Main menu handler with styled menu."""
+    """Main menu handler with questionary menu."""
+    choices = [
+        "Управление конфигурационными файлами",
+        "Управление активными пользователями",
+        "Развернуть стенд",
+        "Удалить стенд",
+        "Выход"
+    ]
     while True:
         shared.console.clear()
-        shared.console.print(shared.Panel.fit(
-            "\n[green]1. Управление конфигурационными файлами[/green]\n"
-            "[green]2. Развернуть стенд[/green]\n"
-            "[green]3. Удалить стенд[/green]\n"
-            "[red]0. Выход[/red]",
-            title="[bold blue]Главное меню[/bold blue]",
-            border_style="blue"
-        ))
-        shared.console.print()
-
-        choice = input("Выберите действие: ").strip()
-        if choice == '0':
+        choice = questionary.select("Главное меню", choices=choices).ask()
+        if choice == "Выход":
             shared.console.print("[blue]Выход из программы...[/blue]")
             sys.exit(0)
-        elif choice == '1':
+        elif choice == "Управление конфигурационными файлами":
             config_menu()
-        elif choice == '2':
+        elif choice == "Управление активными пользователями":
+            manage_active_users()
+        elif choice == "Развернуть стенд":
             deploy_stand_menu()
-        elif choice == '3':
+        elif choice == "Удалить стенд":
             delete_stand_menu()
-        else:
-            shared.console.print("[red]Недопустимый выбор. Попробуйте еще раз.[/red]")
 
 def config_menu():
-    """Configuration management menu with styled menu."""
+    """Configuration management menu with questionary."""
+    choices = [
+        "Управление подключениями",
+        "Управление пользователями",
+        "Управление стендами",
+        "Назад"
+    ]
     while True:
         shared.console.clear()
-        shared.console.print(shared.Panel.fit(
-            "\n[green]1. Управление подключениями[/green]\n"
-            "[green]2. Управление пользователями[/green]\n"
-            "[green]3. Управление стендами[/green]\n"
-            "[red]0. Назад[/red]",
-            title="[bold blue]Меню конфигурации[/bold blue]",
-            border_style="blue"
-        ))
-        shared.console.print()
-
-        choice = input("Выберите действие: ").strip()
-        if choice == '0':
+        choice = questionary.select("Меню конфигурации", choices=choices).ask()
+        if choice == "Назад":
             break
-        elif choice == '1':
+        elif choice == "Управление подключениями":
             connection_menu()
-        elif choice == '2':
+        elif choice == "Управление пользователями":
             user_menu()
-        elif choice == '3':
+        elif choice == "Управление стендами":
             stand_menu()
-        else:
-            shared.console.print("[red]Недопустимый выбор.[/red]")
 
 def connection_menu():
-    """Connection management submenu with styled menu."""
+    """Connection management submenu with questionary."""
+    choices = [
+        "Создать новое подключение",
+        "Отобразить все подключения",
+        "Удалить подключение",
+        "Назад"
+    ]
     while True:
         shared.console.clear()
-        shared.console.print(shared.Panel.fit(
-            "\n[green]1. Создать новое подключение[/green]\n"
-            "[green]2. Отобразить все подключения[/green]\n"
-            "[green]3. Удалить подключение[/green]\n"
-            "[red]0. Назад[/red]",
-            title="[bold blue]Управление подключениями[/bold blue]",
-            border_style="blue"
-        ))
-        shared.console.print()
-
-        choice = input("Выберите действие: ").strip()
-        if choice == '0':
+        choice = questionary.select("Управление подключениями", choices=choices).ask()
+        if choice == "Назад":
             break
-        elif choice == '1':
+        elif choice == "Создать новое подключение":
             create_connection()
-        elif choice == '2':
+        elif choice == "Отобразить все подключения":
             display_connections()
-        elif choice == '3':
+        elif choice == "Удалить подключение":
             delete_connection()
-        else:
-            shared.console.print("[red]Недопустимый выбор.[/red]")
 
 def user_menu():
-    """User management menu."""
+    """User management menu with questionary."""
+    choices = [
+        "Ввести пользователей вручную",
+        "Импорт пользователей из списка",
+        "Отобразить списки пользователей",
+        "Удалить список пользователей",
+        "Назад"
+    ]
     while True:
         shared.console.clear()
-        shared.console.print(shared.Panel.fit(
-            "\n[green]1. Ввести пользователей вручную[/green]\n"
-            "[green]2. Импорт пользователей из списка[/green]\n"
-            "[green]3. Отобразить списки пользователей[/green]\n"
-            "[green]4. Удалить список пользователей[/green]\n"
-            "[red]0. Назад[/red]",
-            title="[bold blue]Управление пользователями[/bold blue]",
-            border_style="blue"
-        ))
-        shared.console.print()
-
-        choice = input("Выберите действие: ").strip()
-        if choice == '0':
+        choice = questionary.select("Управление пользователями", choices=choices).ask()
+        if choice == "Назад":
             break
-        elif choice == '1':
+        elif choice == "Ввести пользователей вручную":
             input_users_manual()
-        elif choice == '2':
+        elif choice == "Импорт пользователей из списка":
             import_users()
-        elif choice == '3':
+        elif choice == "Отобразить списки пользователей":
             display_user_lists()
-        elif choice == '4':
+        elif choice == "Удалить список пользователей":
             delete_user_list()
-        else:
-            shared.console.print("[red]Недопустимый выбор.[/red]")
 
 def stand_menu():
-    """Stand management menu."""
+    """Stand management menu with questionary."""
+    choices = [
+        "Создать стенд",
+        "Вывести список стендов",
+        "Удалить стенд",
+        "Назад"
+    ]
     while True:
         shared.console.clear()
-        shared.console.print(shared.Panel.fit(
-            "\n[green]1. Создать стенд[/green]\n"
-            "[green]2. Вывести список стендов[/green]\n"
-            "[green]3. Удалить стенд[/green]\n"
-            "[red]0. Назад[/red]",
-            title="[bold blue]Управление стендами[/bold blue]",
-            border_style="blue"
-        ))
-        shared.console.print()
-
-        choice = input("Выберите действие: ").strip()
-        if choice == '0':
+        choice = questionary.select("Управление стендами", choices=choices).ask()
+        if choice == "Назад":
             break
-        elif choice == '1':
+        elif choice == "Создать стенд":
             create_stand_menu(shared.DEFAULT_CONN)
-        elif choice == '2':
+        elif choice == "Вывести список стендов":
             display_list_of_stands()
-        elif choice == '3':
+        elif choice == "Удалить стенд":
             delete_stand_file()
-        else:
-            shared.console.print("[red]Недопустимый выбор.[/red]")
 
 def create_stand_menu(conn_name: Optional[str] = None):
     """Create stand submenu."""
@@ -301,71 +276,59 @@ def create_stand_menu(conn_name: Optional[str] = None):
             '4': _save
         }
 
+        choices = [
+            "Создать VM",
+            "Удалить VM из стенда",
+            "Отобразить список VM",
+            "Сохранить стенд",
+            "Назад"
+        ]
+        indices = ['1', '2', '3', '4', '0']
         while not exit_menu:
-            choice = _display_menu(
-                f"Создание стенда: {stand_name}",
-                {
-                    '1': 'Создать VM',
-                    '2': 'Удалить VM из стенда',
-                    '3': 'Отобразить список VM',
-                    '4': 'Сохранить стенд',
-                    '0': 'Назад'
-                }
-            )
-
+            shared.console.clear()
+            choice = questionary.select(f"Создание стенда: {stand_name}", choices=choices).ask()
+            choice = indices[choices.index(choice)]
             if choice in handlers:
                 handlers[choice]()
             else:
                 shared.console.print("[red]Недопустимый выбор.[/red]")
 
 def deploy_stand_menu():
-    """Deploy stand submenu."""
+    """Deploy stand submenu with questionary."""
     from .deploy_stand_local import deploy_stand_local
     from .deploy_stand_distributed import deploy_stand_distributed
 
+    choices = [
+        "Локальная развертка ВМ",
+        "Равномерное распределение машин между нодами",
+        "Назад"
+    ]
     while True:
         shared.console.clear()
-        shared.console.print(shared.Panel.fit(
-            "\n[green]1. Локальная развертка ВМ[/green]\n"
-            "[green]2. Равномерное распределение машин между нодами[/green]\n"
-            "[red]0. Назад[/red]",
-            title="[bold blue]Развернуть стенд[/bold blue]",
-            border_style="blue"
-        ))
-        shared.console.print()
-
-        choice = input("Выберите: ").strip()
-        if choice == '0':
+        choice = questionary.select("Развернуть стенд", choices=choices).ask()
+        if choice == "Назад":
             break
-        elif choice == '1':
+        elif choice == "Локальная развертка ВМ":
             deploy_stand_local()
-        elif choice == '2':
+        elif choice == "Равномерное распределение машин между нодами":
             deploy_stand_distributed()
-        else:
-            shared.console.print("[red]Недопустимый выбор.[/red]")
 
 def delete_stand_menu():
-    """Delete stand submenu."""
+    """Delete stand submenu with questionary."""
+    choices = [
+        "Удалить стенд пользователя",
+        "Удалить все стенды из списка пользователей",
+        "Назад"
+    ]
     while True:
         shared.console.clear()
-        shared.console.print(shared.Panel.fit(
-            "\n[green]1. Удалить стенд пользователя[/green]\n"
-            "[green]2. Удалить все стенды из списка пользователей[/green]\n"
-            "[red]0. Назад[/red]",
-            title="[bold blue]Удалить стенд[/bold blue]",
-            border_style="blue"
-        ))
-        shared.console.print()
-
-        choice = input("Выберите: ").strip()
-        if choice == '0':
+        choice = questionary.select("Удалить стенд", choices=choices).ask()
+        if choice == "Назад":
             break
-        elif choice == '1':
+        elif choice == "Удалить стенд пользователя":
             delete_user_stand()
-        elif choice == '2':
+        elif choice == "Удалить все стенды из списка пользователей":
             delete_all_user_stands()
-        else:
-            shared.console.print("[red]Недопустимый выбор.[/red]")
 
 def select_clone_type() -> int:
     """Select clone type."""

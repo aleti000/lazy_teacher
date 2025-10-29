@@ -15,3 +15,6 @@ PyYAML>=6.0
 # Additional utilities for future enhancements:
 # requests>=2.28.0    # If direct REST API calls are needed
 # aiohttp>=3.8.0      # If async operations are implemented
+
+# Interactive CLI prompts for menu navigation
+questionary>=2.0.0
