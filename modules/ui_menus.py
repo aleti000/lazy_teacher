@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-UI Menus module for Lazy Teacher.
+UI Menus mo_ule for Lazy Teacher.
 Provides optimized menu interfaces for the application.
 """
 
@@ -55,7 +55,7 @@ def _display_menu(title: str, options: Dict[str, str], border_color: str = "blue
         shared.console.print()
 
         choice = input("Выберите действие: ").strip()
-        logger.debug(f"Menu choice: {choice}", menu=title)
+        logger.debug(f"Menu choice: {choice} for menu: {title}")
         return choice
 
 def _handle_menu_choice(choice: str, handlers: Dict[str, Callable]) -> bool:
@@ -75,7 +75,7 @@ def _handle_menu_choice(choice: str, handlers: Dict[str, Callable]) -> bool:
                 pass
             return True
         except Exception as e:
-            logger.error(f"Error in menu handler for choice {choice}", error=str(e))
+            logger.error(f"Error in menu handler for choice {choice}: {e}")
             shared.console.print(f"[red]Ошибка выполнения действия: {e}[/red]")
             input("Нажмите Enter для продолжения...")
             return True
@@ -121,7 +121,7 @@ def select_from_config_files(pattern: str, suffix: str, title: str) -> Optional[
                 logger.info(f"Selected {suffix.lower()}: {name} (file: {file_path})")
                 return data, file_path
         except (ValueError, FileNotFoundError) as e:
-            logger.warning(f"Error selecting {suffix.lower()}", error=str(e))
+            logger.warning(f"Error selecting {suffix.lower()}: {e}")
 
         shared.console.print("[red]Некорректный выбор.[/red]")
         return None
@@ -289,7 +289,7 @@ def create_stand_menu(conn_name: Optional[str] = None):
         def _save():
             nonlocal exit_menu
             save_stand(stand_name, stand)
-            logger.info(f"Stand '{stand_name}' created successfully", machine_count=len(stand.get('machines', [])))
+            logger.info(f"Stand '{stand_name}' created successfully with {len(stand.get('machines', []))} machines")
             exit_menu = True
 
         # Menu handlers

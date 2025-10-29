@@ -29,7 +29,7 @@ def select_connection() -> Optional[str]:
         # Check if config file exists
         if not config_file.exists():
             shared.console.print("[yellow]Файл конфигурации подключений не найден.[/yellow]")
-            logger.warning("Proxmox config file not found", config_file=str(config_file))
+            logger.warning(f"Proxmox config file not found: {config_file}")
             return None
 
         # Load configuration

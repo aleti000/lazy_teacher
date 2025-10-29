@@ -38,7 +38,7 @@ def _save_config(config: Dict[str, Any]) -> bool:
     try:
         with open(config_file, 'w', encoding='utf-8') as f:
             yaml.safe_dump(config, f, default_flow_style=False)
-        logger.debug(f"Saved {len(config)} connections to config", config_file=str(config_file))
+        logger.debug(f"Saved {len(config)} connections to config file {config_file}")
         return True
     except Exception as e:
         log_error(logger, e, "Save config", config_file=str(config_file))

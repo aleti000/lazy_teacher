@@ -36,7 +36,7 @@ class LazyTeacherLogger:
 
         # Setup console handler with Rich
         console_handler = RichHandler(console=console, show_time=False, show_path=False)
-        console_handler.setLevel(logging.INFO)
+        console_handler.setLevel(logging.WARNING)  # Only WARNING and above to console
         console_handler.setFormatter(console_formatter)
 
         # Setup logger
