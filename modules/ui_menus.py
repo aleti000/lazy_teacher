@@ -21,8 +21,80 @@ from .users import input_users_manual, import_users, display_user_lists, delete_
 from .stands import add_vm_to_stand, remove_vm_from_stand, display_stand_vms, save_stand, delete_stand_file, display_list_of_stands
 from .deletion import delete_user_stand, delete_all_user_stands
 from .active_users import manage_active_users
+from .stand_management import manage_stands
 
 logger = get_logger(__name__)
+
+def show_help(section: str) -> None:
+    """Display contextual help for a menu section."""
+    shared.console.clear()
+
+    help_text = {
+        "main": """
+[bold blue]Справка: Главное меню[/bold blue]
+
+Управление системой развертывания стендов на Proxmox VE.
+
+[bold green]Опции:[/bold green]
+- [cyan]Управление конфигурационными файлами[/cyan]: настройка подключений, пользователей, стендов
+- [cyan]Управление стендами[/cyan]: развертывание, управление, удаление стендов
+- [cyan]Управление активными пользователями[/cyan]: мониторинг и управление VMs активных пользователей
+- [cyan]Помощь[/cyan]: эта справка
+- [cyan]Выход[/cyan]: выход из программы
+
+Для навигации используйте стрелки, для выбора - Enter.
+        """,
+        "stands": """
+[bold blue]Справка: Управление стендами[/bold blue]
+
+Развертывание и управление виртуальными стендами на Proxmox VE.
+
+[bold green]Опции:[/bold green]
+- [cyan]Развернуть стенд[/cyan]: развертывание стенда в кластере
+  - Выберите конфигурацию стенда из сохраненных
+  - Укажите список пользователей для развертывания
+  - Выберите тип развертывания (локальная/распределенная)
+  - Система создаст пользователей, пулы, VM, сети автоматически
+
+- [cyan]Удалить стенд[/cyan]: удаление развернутых стендов
+  - Удалите стенд конкретного пользователя
+  - Или удалите все стенды для группы пользователей
+
+[bold blue]Создание стенда:[/bold blue]
+1. Выберите "Создать стенд" в меню управления стендами
+2. Введите имя стенда
+3. Дизайн конфигурации VM:
+   - Выберите шаблон для клонирования
+   - Настройте устройства (linux/ecorouter)
+   - Добавьте сетевые интерфейсы (bridge:.vlan или **bridge)
+   - Принесите bridge будут автоматически созданы в кластере
+
+[bold blue]Bridge (сетевые мосты):[/bold blue]
+- **bridge: конкретный bridge по имени (например, **vmbr0)
+- bridge: bridge по alias с автоматическим созданием
+- bridge.vlan: bridge с VLAN поддержкой
+- Система управляет нумерацией bridge автоматически
+
+[bold blue]Развертывание:[/bold blue]
+- Для каждого пользователя создается пул VM с полными правами
+- VM клонируются из выбранных шаблонов
+- Применяются сетевые конфигурации с созданными bridge
+- Создаются snapshot "start" для последующего отката
+
+[bold cyan]Советы:[/bold cyan]
+- Перед развертыванием убедитесь в наличии шаблонов
+- Bridge создаются автоматически для изоляции пользователей
+- Выход из создания стенда сохраняет его без развертывания
+        """,
+    }
+
+    if section in help_text:
+        shared.console.print(help_text[section])
+    else:
+        shared.console.print(f"[yellow]Справка для раздела '{section}' не найдена.[/yellow]")
+
+    input("\nНажмите Enter для продолжения...")
+    return
 
 def _display_menu(title: str, options: Dict[str, str], border_color: str = "blue") -> Optional[str]:
     """
@@ -133,9 +205,9 @@ def main_menu():
     """Main menu handler with questionary menu."""
     choices = [
         "Управление конфигурационными файлами",
+        "Управление стендами",
         "Управление активными пользователями",
-        "Развернуть стенд",
-        "Удалить стенд",
+        "Помощь",
         "Выход"
     ]
     while True:
@@ -146,12 +218,12 @@ def main_menu():
             sys.exit(0)
         elif choice == "Управление конфигурационными файлами":
             config_menu()
+        elif choice == "Управление стендами":
+            manage_stands()
         elif choice == "Управление активными пользователями":
             manage_active_users()
-        elif choice == "Развернуть стенд":
-            deploy_stand_menu()
-        elif choice == "Удалить стенд":
-            delete_stand_menu()
+        elif choice == "Помощь":
+            show_help("main")
 
 def config_menu():
     """Configuration management menu with questionary."""
@@ -222,6 +294,7 @@ def stand_menu():
         "Создать стенд",
         "Вывести список стендов",
         "Удалить стенд",
+        "Помощь",
         "Назад"
     ]
     while True:
@@ -235,6 +308,10 @@ def stand_menu():
             display_list_of_stands()
         elif choice == "Удалить стенд":
             delete_stand_file()
+        elif choice == "Помощь":
+            # Use the show_help from stand_management since it's detailed
+            from .stand_management import show_help
+            show_help("stands")
 
 def create_stand_menu(conn_name: Optional[str] = None):
     """Create stand submenu."""

@@ -147,6 +147,106 @@ def stop_all_vms_in_pool(prox: Any, pool_name: str) -> bool:
         shared.console.print(f"[red]Ошибка остановки VM в пуле '{pool_name}': {e}[/red]")
         return False
 
+def rollback_pool_to_snapshot(prox: Any, pool_name: str, snapshot: str = "start") -> bool:
+    """
+    Rollback all VMs in a specific pool to the specified snapshot.
+
+    Args:
+        prox: Proxmox API connection object
+        pool_name: Name of the pool to rollback VMs in
+        snapshot: Snapshot name to rollback to (default: "start")
+
+    Returns:
+        True if all rollback operations initiated successfully, False otherwise
+    """
+    from .tasks import wait_for_task
+
+    logger.info(f"Starting rollback operation for pool: {pool_name} to snapshot: {snapshot}")
+    shared.console.print(f"[cyan]Откатываем все VM в пуле '{pool_name}' к snapshot '{snapshot}'...[/cyan]")
+
+    try:
+        pool_details = prox.pools(pool_name).get()
+        members = pool_details.get('members', [])
+        rollback_tasks = []
+
+        for member in members:
+            if member['type'] == 'qemu':
+                node = member['node']
+                vmid = member['vmid']
+
+                try:
+                    # Get available snapshots for the VM
+                    snapshots = prox.nodes(node).qemu(vmid).snapshot.get()
+                    snapshot_names = [s['name'] for s in snapshots]
+
+                    if snapshot in snapshot_names:
+                        logger.info(f"Rolling back VM {vmid} on node {node} to snapshot {snapshot}")
+                        result = prox.nodes(node).qemu(vmid).snapshot(snapshot).rollback.post()
+                        rollback_tasks.append((node, result))
+                        shared.console.print(f" - [yellow]✓ Отправлен откат VM {vmid} к snapshot '{snapshot}' на ноде {node}[/yellow]")
+                    else:
+                        shared.console.print(f" - [red]✗ Snapshot '{snapshot}' не найден для VM {vmid} на ноде {node}[/red]")
+                        logger.warning(f"Snapshot '{snapshot}' not found for VM {vmid} on node {node}")
+
+                except Exception as e:
+                    logger.error(f"Failed to rollback VM {vmid}: {e}")
+                    shared.console.print(f" - [red]✗ Ошибка отката VM {vmid} на ноде {node}: {e}[/red]")
+
+        # Wait for rollback tasks to complete
+        if rollback_tasks:
+            shared.console.print("[cyan]Ожидание завершения операций отката...[/cyan]")
+            for node, task_id in rollback_tasks:
+                try:
+                    wait_for_task(prox, node, task_id)
+                    shared.console.print(f" - [green]✓ Откат на ноде {node} завершен[/green]")
+                except Exception as e:
+                    logger.error(f"Rollback task wait failed on node {node}: {e}")
+                    shared.console.print(f" - [red]✗ Ошибка ожидания завершения отката на ноде {node}: {e}[/red]")
+
+            # After rollback, start all VMs in the pool
+            shared.console.print("[cyan]Запускаем VM после отката...[/cyan]")
+            start_tasks = []
+
+            for member in members:
+                if member['type'] == 'qemu':
+                    node = member['node']
+                    vmid = member['vmid']
+
+                    # Only start VMs that were rolled back (if they have the snapshot)
+                    try:
+                        snapshots = prox.nodes(node).qemu(vmid).snapshot.get()
+                        snapshot_names = [s['name'] for s in snapshots]
+                        if snapshot in snapshot_names:
+                            # Start the VM
+                            logger.info(f"Starting VM {vmid} on node {node} after rollback")
+                            result = prox.nodes(node).qemu(vmid).status.start.post()
+                            start_tasks.append((node, result))
+                            shared.console.print(f" - [blue]✓ Отправлен запуск VM {vmid} на ноде {node}[/blue]")
+                        else:
+                            shared.console.print(f" - [dim]VM {vmid} на ноде {node} не имеет snapshot '{snapshot}', пропускаем запуск[/dim]")
+                    except Exception as e:
+                        logger.error(f"Failed to start VM {vmid}: {e}")
+                        shared.console.print(f" - [red]✗ Ошибка запуска VM {vmid} на ноде {node}: {e}[/red]")
+
+            # Wait for start tasks to complete
+            if start_tasks:
+                shared.console.print("[cyan]Ожидание завершения запуска VM...[/cyan]")
+                for node, task_id in start_tasks:
+                    try:
+                        wait_for_task(prox, node, task_id)
+                        shared.console.print(f" - [green]✓ Запуск на ноде {node} завершен[/green]")
+                    except Exception as e:
+                        logger.error(f"Start task wait failed on node {node}: {e}")
+                        shared.console.print(f" - [red]✗ Ошибка ожидания запуска на ноде {node}: {e}[/red]")
+
+        shared.console.print(f"[green]Операция отката для пула '{pool_name}' (с последующим запуском) завершена[/green]")
+        return True
+
+    except Exception as e:
+        logger.error(f"Error rolling back VMs in pool {pool_name}: {e}")
+        shared.console.print(f"[red]Ошибка отката VM в пуле '{pool_name}': {e}[/red]")
+        return False
+
 def manage_active_users():
     """Main function for managing active users - displays menu and handles selection."""
     with OperationTimer(logger, "Manage active users"):
@@ -203,20 +303,51 @@ def manage_active_users():
             # Get pool name from the mapping
             pool_name = choice_to_pool[selected]
 
-            # Confirm stop operation
-            confirm = questionary.confirm(
-                f"Остановить ВСЕ VMs в пуле '{pool_name}'?",
-                default=False
-            ).ask()
+            # Show submenu for selected user
+            shared.console.clear()
+            shared.console.print(f"[bold blue]Управление пулом: {pool_name}[/bold blue]")
+            shared.console.print()
 
-            if confirm:
-                success = stop_all_vms_in_pool(prox, pool_name)
-                if success:
-                    shared.console.print(f"[green]Операция для пула '{pool_name}' завершена успешно.[/green]")
+            action_choices = [
+                "Остановить стенд",
+                "Откатить стенд",
+                "Назад"
+            ]
+
+            action = questionary.select("Выберите действие:", action_choices).ask()
+
+            if action == "Назад":
+                continue
+
+            if action == "Остановить стенд":
+                confirm = questionary.confirm(
+                    f"Остановить ВСЕ VMs в пуле '{pool_name}'?",
+                    default=False
+                ).ask()
+                if confirm:
+                    success = stop_all_vms_in_pool(prox, pool_name)
                 else:
-                    shared.console.print(f"[red]Операция для пула '{pool_name}' завершилась с ошибками.[/red]")
+                    success = None
+                    shared.console.print("[dim]Операция отменена.[/dim]")
+
+            elif action == "Откатить стенд":
+                confirm = questionary.confirm(
+                    f"Откатить ВСЕ VMs в пуле '{pool_name}' к snapshot 'start'?",
+                    default=False
+                ).ask()
+                if confirm:
+                    success = rollback_pool_to_snapshot(prox, pool_name, snapshot="start")
+                else:
+                    success = None
+                    shared.console.print("[dim]Операция отменена.[/dim]")
+
+            if success is True:
+                shared.console.print(f"[green]Операция для пула '{pool_name}' завершена успешно.[/green]")
+            elif success is False:
+                shared.console.print(f"[red]Операция для пула '{pool_name}' завершилась с ошибками.[/red]")
             else:
-                shared.console.print("[dim]Операция отменена.[/dim]")
+                # Cancelled
+                pass
 
             # Continue showing menu after operation
             input("\nНажмите Enter для продолжения...")
