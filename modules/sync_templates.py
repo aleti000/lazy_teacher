@@ -1,190 +1,85 @@
-
 #!/usr/bin/env python3
 """
 Sync Templates module for Lazy Teacher.
 Provides optimized functions for template synchronization across Proxmox nodes.
+Now uses centralized templates.yaml registry instead of stand config files.
 """
 
 import string
 import random
-from typing import Dict, List, Optional, Any, Tuple, Set, DefaultDict
-from collections import defaultdict
+from typing import Dict, List, Optional, Any, Set
 import logging
 
 from . import shared
-from .tasks import wait_for_clone_task as wait_clone_func, wait_for_template_task as wait_template_func, wait_for_migration_task as wait_migration_func
+from .templates import (
+    get_template_registry, get_replica_vmid, get_source_node,
+    register_template, register_replica, verify_template_on_node,
+    ensure_template_on_node
+)
+from .tasks import wait_for_clone_task, wait_for_template_task, wait_for_migration_task
 from .logger import get_logger, log_operation, log_error, OperationTimer
 
 logger = get_logger(__name__)
 console = shared.console
 
-def _group_machines_by_template(stand: Dict[str, Any]) -> DefaultDict[int, List[Dict[str, Any]]]:
-    """
-    Group machines by their template VMID to avoid redundant operations.
 
+def get_unique_templates(stand: Dict[str, Any]) -> Dict[int, Dict[str, Any]]:
+    """
+    Extract unique templates from stand configuration.
+    
     Args:
         stand: Stand configuration dictionary
-
+        
     Returns:
-        Dictionary mapping template_vmid to list of machines
+        Dictionary mapping template_vmid to template info:
+        {
+            100: {
+                'source_node': 'pve1',
+                'machines': ['gw', 'srv']  # Machine names using this template
+            }
+        }
     """
-    template_groups: DefaultDict[int, List[Dict[str, Any]]] = defaultdict(list)
-
+    templates = {}
+    
     for machine in stand.get('machines', []):
         template_vmid = machine.get('template_vmid')
-        if template_vmid is not None:
-            template_groups[template_vmid].append(machine)
-        else:
+        template_node = machine.get('template_node')
+        
+        if template_vmid is None:
             logger.warning(f"Machine {machine.get('name', 'unknown')} missing template_vmid")
+            continue
+            
+        if template_vmid not in templates:
+            templates[template_vmid] = {
+                'source_node': template_node,
+                'machines': []
+            }
+        
+        templates[template_vmid]['machines'].append(machine.get('name', 'unknown'))
+        
+        # Update source node if not set
+        if not templates[template_vmid]['source_node']:
+            templates[template_vmid]['source_node'] = template_node
+    
+    logger.debug(f"Found {len(templates)} unique templates in stand")
+    return templates
 
-    logger.debug(f"Grouped machines into {len(template_groups)} template groups")
-    return template_groups
 
-def _verify_template_exists(prox, node: str, vmid: int) -> bool:
-    """
-    Verify if template exists and is actually a template on the specified node.
-
-    Args:
-        prox: Proxmox API connection
-        node: Node name
-        vmid: VM ID to check
-
-    Returns:
-        True if template exists and is valid, False otherwise
-    """
-    try:
-        vms_on_node = prox.nodes(node).qemu.get()
-        template_present = any(
-            vm['vmid'] == vmid and vm.get('template') == 1
-            for vm in vms_on_node
-        )
-        if template_present:
-            logger.debug(f"Template {vmid} verified on node {node}")
-        return template_present
-    except Exception as e:
-        logger.warning(f"Failed to verify template {vmid} on node {node}: {e}")
-        return False
-
-def _remove_invalid_replica(machines: List[Dict[str, Any]], node: str) -> None:
-    """
-    Remove invalid replica entries from machines when verification fails.
-
-    Args:
-        machines: List of machines using the same template
-        node: Node where replica was supposed to exist
-    """
-    for machine in machines:
-        if 'replicas' in machine and node in machine['replicas']:
-            del machine['replicas'][node]
-            logger.debug(f"Removed invalid replica entry for node {node} from machine {machine.get('name')}")
-
-def _create_template_replica(prox, original_node: str, template_vmid: int,
-                           target_node: str, machines: List[Dict[str, Any]]) -> bool:
-    """
-    Create and migrate a template replica to target node.
-
-    Args:
-        prox: Proxmox API connection
-        original_node: Source node where template exists
-        template_vmid: Template VMID to replicate
-        target_node: Target node for migration
-        machines: Machines that will have this replica assigned
-
-    Returns:
-        True if replica created successfully, False otherwise
-    """
-    try:
-        # Generate new VMID for clone
-        clone_vmid = prox.cluster.nextid.get()
-        safe_name = f"tpl-{original_node}-{template_vmid}"
-
-        logger.info(f"Creating template clone {clone_vmid} from {template_vmid} on {original_node}")
-
-        # Create full clone
-        clone_task_id = prox.nodes(original_node).qemu(template_vmid).clone.post(
-            newid=clone_vmid,
-            name=safe_name,
-            full=1
-        )
-
-        # Wait for clone completion
-        try:
-            wait_clone_func(prox, original_node, clone_task_id)
-        except Exception as e:
-            log_error(logger, e, f"Clone template {template_vmid}")
-            return False
-
-        # Convert to template
-        try:
-            template_task_id = prox.nodes(original_node).qemu(clone_vmid).template.post()
-            wait_template_func(prox, original_node, template_task_id)
-        except Exception as e:
-            log_error(logger, e, f"Convert to template {clone_vmid}")
-            return False
-
-        # Migrate to target node
-        try:
-            migrate_result = prox.nodes(original_node).qemu(clone_vmid).migrate.post(
-                target=target_node,
-                online=0
-            )
-
-            if migrate_result:
-                migrate_upid = migrate_result.get('data') if isinstance(migrate_result, dict) else migrate_result
-                if migrate_upid and wait_migration_func(prox, original_node, migrate_upid):
-                    # Assign replica to all machines
-                    _assign_replicas(machines, target_node, clone_vmid)
-                    console.print(
-                        f"[green]Шаблон для {len(machines)} машины(н) с VMID {template_vmid} "
-                        f"синхронизирован на ноду {target_node}[/green]"
-                    )
-                    log_operation(logger, "Template replica created",
-                                success=True,
-                                template_vmid=template_vmid,
-                                clone_vmid=clone_vmid,
-                                target_node=target_node,
-                                machine_count=len(machines))
-                    return True
-                else:
-                    logger.error(f"Migration of template {clone_vmid} to {target_node} failed or timed out")
-            else:
-                logger.error(f"Failed to initiate migration of template {clone_vmid} to {target_node}")
-        except Exception as e:
-            log_error(logger, e, f"Migrate template {clone_vmid} to {target_node}")
-
-        return False
-
-    except Exception as e:
-        log_error(logger, e, f"Create template replica {template_vmid} -> {target_node}")
-        return False
-
-def _assign_replicas(machines: List[Dict[str, Any]], node: str, vmid: int) -> None:
-    """
-    Assign replica VMID to all machines for specified node.
-
-    Args:
-        machines: List of machines to update
-        node: Node where replica exists
-        vmid: Replica VMID on that node
-    """
-    for machine in machines:
-        if 'replicas' not in machine:
-            machine['replicas'] = {}
-        machine['replicas'][node] = vmid
-        logger.debug(f"Assigned replica {vmid} on {node} to machine {machine.get('name')}")
 def sync_templates(prox, stand: Dict[str, Any], nodes: List[str]) -> bool:
     """
-    Sync templates to all nodes, ensure replicas exist where needed.
-
-    This function groups machines by their template VMID, then ensures each template
-    has replicas on all required nodes. It creates clones, converts them to templates,
-    migrates to target nodes, and updates machine configurations accordingly.
-
+    Sync templates to all nodes using centralized templates.yaml registry.
+    
+    This function:
+    1. Extracts unique templates from stand config
+    2. Checks templates.yaml registry for existing replicas
+    3. Creates missing replicas and registers them in templates.yaml
+    4. Updates stand config with replica VMIDs for backward compatibility
+    
     Args:
         prox: Proxmox API connection object
         stand: Stand configuration dictionary containing machines
         nodes: List of all available nodes
-
+        
     Returns:
         True if any templates were synchronized, False if no changes were made
     """
@@ -194,70 +89,171 @@ def sync_templates(prox, stand: Dict[str, Any], nodes: List[str]) -> bool:
 
     with OperationTimer(logger, "Sync templates across nodes"):
         logger.info(f"Starting template synchronization for {len(nodes)} nodes")
-
-        updated = False
-
-        # Group machines by template to avoid redundant operations
-        template_groups = _group_machines_by_template(stand)
-        if not template_groups:
+        
+        # Get unique templates from stand
+        templates = get_unique_templates(stand)
+        if not templates:
             logger.warning("No valid machines with template_vmid found in stand")
             return False
-
-        # Process each template group
-        for template_vmid, machines in template_groups.items():
-            logger.info(f"Processing template {template_vmid} used by {len(machines)} machines")
-
-            # Get original node for this template
-            original_machine = machines[0]
-            original_node = original_machine.get('template_node')
-            if not original_node:
-                logger.error(f"Machine {original_machine.get('name', 'unknown')} missing template_node")
+        
+        updated = False
+        
+        # Process each template
+        for template_vmid, template_info in templates.items():
+            source_node = template_info['source_node']
+            machine_names = template_info['machines']
+            
+            if not source_node:
+                logger.error(f"Template {template_vmid} has no source node")
                 continue
-
-            # Sync template to each target node
-            for node in nodes:
-                if node == original_node:
-                    continue  # Skip original node
-
-                logger.debug(f"Checking template {template_vmid} replica on node {node}")
-
-                # Check if replica already exists and is valid
-                replica_vmid = _check_existing_replica(machines, node)
-                if replica_vmid and _verify_template_exists(prox, node, replica_vmid):
-                    logger.debug(f"Valid template {replica_vmid} replica exists on {node}")
+            
+            logger.info(f"Processing template {template_vmid} (source: {source_node}, used by: {machine_names})")
+            
+            # Register template in global registry if not exists
+            register_template(template_vmid, source_node)
+            
+            # Sync to each target node
+            for target_node in nodes:
+                if target_node == source_node:
                     continue
-
-                # Replica invalid or missing, create new one
-                if replica_vmid:
-                    _remove_invalid_replica(machines, node)
-
-                logger.info(f"Creating template {template_vmid} replica on {node}")
-                if _create_template_replica(prox, original_node, template_vmid, node, machines):
+                
+                # Check if replica already exists in registry and is valid
+                replica_vmid = get_replica_vmid(template_vmid, target_node)
+                
+                if replica_vmid and verify_template_on_node(prox, target_node, replica_vmid):
+                    logger.debug(f"Template {template_vmid} replica {replica_vmid} already exists on {target_node}")
+                    continue
+                
+                # Create replica
+                console.print(f"[cyan]Синхронизация шаблона {template_vmid} на ноду {target_node}...[/cyan]")
+                
+                new_replica_vmid = ensure_template_on_node(
+                    prox, template_vmid, source_node, target_node
+                )
+                
+                if new_replica_vmid:
                     updated = True
-                    log_operation(logger, "Template synchronized",
-                                success=True,
-                                template_vmid=template_vmid,
-                                target_node=node,
-                                machine_count=len(machines))
+                    # Update stand config with replica info for backward compatibility
+                    _update_stand_replicas(stand, template_vmid, target_node, new_replica_vmid)
+                    console.print(f"[green]Шаблон {template_vmid} синхронизирован на {target_node} (VMID: {new_replica_vmid})[/green]")
                 else:
-                    logger.error(f"Failed to create template replica {template_vmid} on {node}")
-
+                    console.print(f"[red]Ошибка синхронизации шаблона {template_vmid} на {target_node}[/red]")
+        
         logger.info(f"Template synchronization {'completed with updates' if updated else 'completed - no changes needed'}")
         return updated
 
-def _check_existing_replica(machines: List[Dict[str, Any]], node: str) -> Optional[int]:
-    """
-    Check if any machine in the group has a recorded replica on the target node.
 
+def _update_stand_replicas(stand: Dict[str, Any], template_vmid: int, 
+                          target_node: str, replica_vmid: int) -> None:
+    """
+    Update stand configuration with replica VMID for backward compatibility.
+    
     Args:
-        machines: List of machines using the same template
-        node: Target node to check
-
-    Returns:
-        Replica VMID if found, None otherwise
+        stand: Stand configuration dictionary
+        template_vmid: Original template VMID
+        target_node: Node where replica exists
+        replica_vmid: Replica VMID on target node
     """
-    for machine in machines:
-        replicas = machine.get('replicas', {})
-        if node in replicas:
-            return int(replicas[node])
-    return None
+    for machine in stand.get('machines', []):
+        if machine.get('template_vmid') == template_vmid:
+            if 'replicas' not in machine:
+                machine['replicas'] = {}
+            machine['replicas'][target_node] = replica_vmid
+            logger.debug(f"Updated stand config: machine {machine.get('name')} replica on {target_node} = {replica_vmid}")
+
+
+def get_template_vmid_for_node(stand: Dict[str, Any], machine: Dict[str, Any], 
+                               target_node: str, prox=None) -> Optional[int]:
+    """
+    Get the appropriate template VMID for a target node.
+    
+    First checks machine's replicas dict, then checks global registry,
+    then falls back to original template_vmid.
+    
+    Args:
+        stand: Stand configuration (for backward compatibility)
+        machine: Machine configuration dictionary
+        target_node: Target node name
+        prox: Optional Proxmox connection for verification
+        
+    Returns:
+        Template VMID to use on target node
+    """
+    template_vmid = machine.get('template_vmid')
+    
+    if not template_vmid:
+        return None
+    
+    # First check machine's replicas (backward compatibility)
+    replicas = machine.get('replicas', {})
+    if target_node in replicas:
+        return int(replicas[target_node])
+    
+    # Then check global registry
+    replica_vmid = get_replica_vmid(template_vmid, target_node)
+    if replica_vmid:
+        return replica_vmid
+    
+    # If target node is source node, use original
+    source_node = machine.get('template_node')
+    if target_node == source_node:
+        return template_vmid
+    
+    # If we have prox connection, try to ensure template exists
+    if prox and source_node:
+        new_replica = ensure_template_on_node(prox, template_vmid, source_node, target_node)
+        if new_replica:
+            # Update stand config for backward compatibility
+            _update_stand_replicas(stand, template_vmid, target_node, new_replica)
+            return new_replica
+    
+    # Fallback to original
+    return template_vmid
+
+
+def sync_all_templates_in_cluster(prox, nodes: List[str]) -> bool:
+    """
+    Sync all known templates from registry to all nodes.
+    Useful for initial cluster setup or maintenance.
+    
+    Args:
+        prox: Proxmox API connection
+        nodes: List of all nodes in cluster
+        
+    Returns:
+        True if any sync performed
+    """
+    registry = get_template_registry()
+    
+    if not registry:
+        logger.info("No templates in registry to sync")
+        return False
+    
+    updated = False
+    
+    for template_vmid_str, template_data in registry.items():
+        template_vmid = int(template_vmid_str)
+        source_node = template_data.get('source_node')
+        
+        if not source_node:
+            logger.warning(f"Template {template_vmid} has no source node in registry")
+            continue
+        
+        for target_node in nodes:
+            if target_node == source_node:
+                continue
+            
+            replica_vmid = get_replica_vmid(template_vmid, target_node)
+            
+            if replica_vmid and verify_template_on_node(prox, target_node, replica_vmid):
+                continue
+            
+            console.print(f"[cyan]Синхронизация шаблона {template_vmid} на {target_node}...[/cyan]")
+            
+            new_replica = ensure_template_on_node(prox, template_vmid, source_node, target_node)
+            
+            if new_replica:
+                updated = True
+                console.print(f"[green]Шаблон {template_vmid} -> {target_node} (VMID: {new_replica})[/green]")
+    
+    return updated

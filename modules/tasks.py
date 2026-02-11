@@ -68,7 +68,7 @@ def wait_for_task(
 
             except Exception as e:
                 error_msg = f"Error checking {task_type} task status: {e}"
-                log_error(logger, e, f"Check {task_type} task status", task_id=task_id, node=node)
+                log_error(logger, e, f"Check {task_type} task status (task_id={task_id}, node={node})")
                 if raise_exceptions:
                     raise Exception(error_msg) from e
                 return False
@@ -86,18 +86,27 @@ def wait_for_task(
         return False
 
 # Legacy function aliases for backward compatibility
-def wait_for_clone_task(proxmox, node, task_id, timeout=600):
-    """Wait for clone task to complete (legacy function)."""
+def wait_for_clone_task(proxmox, node, task_id, timeout=1800):
+    """Wait for clone task to complete (legacy function).
+    
+    Default timeout: 1800 seconds (30 minutes) - full clone can take a long time.
+    """
     return wait_for_task(proxmox, node, task_id, "clone", timeout, 2.0, True)
 
 def wait_for_migration_task(proxmox, node, task_id, timeout=1200):
     """Wait for migration task to complete (legacy function)."""
     return wait_for_task(proxmox, node, task_id, "migration", timeout, 5.0, True)
 
-def wait_for_snapshot_task(proxmox, node, task_id, timeout=300):
-    """Wait for snapshot task to complete (create or delete)."""
+def wait_for_snapshot_task(proxmox, node, task_id, timeout=600):
+    """Wait for snapshot task to complete (create or delete).
+    
+    Default timeout: 600 seconds (10 minutes).
+    """
     return wait_for_task(proxmox, node, task_id, "snapshot", timeout, 2.0, True)
 
-def wait_for_template_task(proxmox, node, task_id, timeout=600):
-    """Wait for template task to complete (legacy function)."""
+def wait_for_template_task(proxmox, node, task_id, timeout=1800):
+    """Wait for template task to complete (legacy function).
+    
+    Default timeout: 1800 seconds (30 minutes).
+    """
     return wait_for_task(proxmox, node, task_id, "template", timeout, 2.0, True)

@@ -1,340 +1,270 @@
 #!/usr/bin/env python3
 """
 Stands module for Lazy Teacher.
-Provides optimized functions for managing stands.
+Provides functions for managing stand configurations.
 """
 
 import glob
 import yaml
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Any
-import logging
+from typing import Dict, List, Optional, Any, Tuple
+
 from . import shared
 from .connections import get_proxmox_connection
 from .logger import get_logger, log_operation, log_error, OperationTimer
-from rich.table import Table
 
 logger = get_logger(__name__)
 
+
 def _get_stand_files() -> List[Tuple[str, str]]:
-    """Get list of stand files with their names."""
+    """Get list of stand configuration files."""
     pattern = str(shared.CONFIG_DIR / "*_stand.yaml")
     files = glob.glob(pattern)
-    return [(Path(file).stem.replace('_stand', ''), file) for file in files]
+    return [(Path(f).stem.replace('_stand', ''), f) for f in files]
 
-def _load_stand(name: str) -> Optional[Dict[str, Any]]:
-    """Load stand configuration from YAML file."""
-    file_path = shared.CONFIG_DIR / f"{name}_stand.yaml"
-    try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            data = yaml.safe_load(f) or {}
-        logger.debug(f"Loaded stand {name} with {len(data.get('machines', []))} VMs")
-        return data
-    except FileNotFoundError:
-        logger.debug(f"Stand file {name} not found")
-        return None
-    except Exception as e:
-        log_error(logger, e, f"Load stand {name}")
-        return None
-
-def _save_stand(name: str, stand: Dict[str, Any]) -> bool:
-    """Save stand configuration to YAML file."""
-    file_path = shared.CONFIG_DIR / f"{name}_stand.yaml"
-    try:
-        with open(file_path, 'w', encoding='utf-8') as f:
-            yaml.safe_dump(stand, f, default_flow_style=False)
-        logger.debug(f"Saved stand {name} with {len(stand.get('machines', []))} VMs")
-        return True
-    except Exception as e:
-        log_error(logger, e, f"Save stand {name}")
-        return False
-
-def _get_available_templates(proxi) -> List[Tuple[str, str, int]]:
-    """
-    Get available VM templates from all nodes.
-
-    Args:
-        proxi: Proxmox API connection object
-
-    Returns:
-        List of (node_name, vm_name, vmid) tuples for templates
-    """
-    templates = []
-    try:
-        nodes = proxi.nodes.get()
-        node_names = [node['node'] for node in nodes]
-        logger.debug(f"Found nodes: {node_names}")
-
-        for node_name in node_names:
-            try:
-                vms = proxi.nodes(node_name).qemu.get()
-                for vm in vms:
-                    if vm.get('template') == 1:
-                        templates.append((node_name, vm['name'], vm['vmid']))
-            except Exception as e:
-                logger.warning(f"Failed to get VMs from node {node_name}: {e}")
-
-    except Exception as e:
-        log_error(logger, e, "Get available templates")
-        return []
-
-    return templates
-
-def _select_from_options(options: List[str], prompt: str, title: str) -> Optional[str]:
-    """Helper to select from list of options."""
-    if not options:
-        shared.console.print(f"[red]Нет доступных {title}.[/red]")
-        return None
-
-    shared.console.print(f"{prompt}:")
-    for i, option in enumerate(options, 1):
-        shared.console.print(f"{i}. {option}")
-
-    try:
-        choice = int(input("Выберите: ")) - 1
-        if 0 <= choice < len(options):
-            return options[choice]
-        else:
-            shared.console.print("[red]Недопустимый выбор.[/red]")
-            return None
-    except ValueError:
-        shared.console.print("[red]Введите число.[/red]")
-        return None
-
-def add_vm_to_stand(stand: Dict[str, Any], conn_name: str) -> None:
-    """Add VM to stand with optimized connection and template selection."""
-    with OperationTimer(logger, f"Add VM to stand {conn_name}"):
-        logger.info("Starting VM addition to stand")
-
-        try:
-            # Get Proxmox connection using optimized connections module
-            proxi = get_proxmox_connection(conn_name)
-        except Exception as e:
-            shared.console.print(f"[red]Ошибка подключения к Proxmox: {e}[/red]")
-            return
-
-        # Get available templates
-        templates = _get_available_templates(proxi)
-        if not templates:
-            shared.console.print("[red]Нет доступных шаблонов.[/red]")
-            return
-
-        # Display templates for selection
-        shared.console.print("Доступные шаблоны:")
-        for i, (node_name, vm_name, vmid) in enumerate(templates, 1):
-            shared.console.print(f"{i}. {node_name} - {vm_name} (VMID: {vmid})")
-
-        try:
-            tmpl_choice = int(input("Выберите шаблон: ")) - 1
-            if not (0 <= tmpl_choice < len(templates)):
-                shared.console.print("[red]Недопустимый выбор.[/red]")
-                return
-        except ValueError:
-            shared.console.print("[red]Введите число.[/red]")
-            return
-
-        template_node, vm_name, vmid = templates[tmpl_choice]
-        logger.info(f"Selected template: {template_node}:{vm_name}:{vmid}")
-
-        # Select device type
-        device_type_options = ["linux", "ecorouter"]
-        device_type = _select_from_options(device_type_options, "Тип машины", "типы машин")
-        if not device_type:
-            return
-
-        # Get VM name
-        vm_name = input("Имя VM: ").strip()
-        if not vm_name:
-            shared.console.print("[yellow]Имя VM не может быть пустым.[/yellow]")
-            return
-
-        # Configure networks
-        networks = []
-        if device_type == "ecorouter":
-            networks.append({'bridge': '**vmbr0', 'comment': '# mngmnt port'})
-            shared.console.print("[green]Автоматически добавлен management порт: **vmbr0**[/green]")
-
-        shared.console.print("Добавьте сетевые интерфейсы (оставьте пустым для завершения):")
-        while True:
-            net = input("Имя сети: ").strip()
-            if not net:
-                break
-            networks.append({'bridge': net})
-
-        if not networks:
-            shared.console.print("[yellow]VM должна иметь хотя бы один сетевой интерфейс.[/yellow]")
-            return
-
-        # Create VM configuration
-        vm_config = {
-            'device_type': device_type,
-            'name': vm_name,
-            'template_node': template_node,
-            'template_vmid': vmid,
-            'networks': networks
-        }
-
-        stand['machines'].append(vm_config)
-        log_operation(logger, "VM added to stand", success=True, vm_name=vm_name, device_type=device_type, template=f"{template_node}:{vmid}")
-        shared.console.print(f"[green]VM '{vm_name}' добавлена в стенд.[/green]")
-
-def remove_vm_from_stand(stand: Dict[str, Any]) -> None:
-    """Remove VM from stand with confirmation."""
-    with OperationTimer(logger, "Remove VM from stand"):
-        display_stand_vms(stand)
-
-        if not stand['machines']:
-            shared.console.print("[yellow]Стенд пуст.[/yellow]")
-            return
-
-        vm_names = [vm['name'] for vm in stand['machines']]
-        shared.console.print("Выберите VM для удаления:")
-        for i, name in enumerate(vm_names, 1):
-            shared.console.print(f"{i}. {name}")
-
-        try:
-            choice = int(input("Номер: ")) - 1
-            if 0 <= choice < len(vm_names):
-                removed_vm = stand['machines'].pop(choice)
-                shared.console.print(f"[green]Удалена VM: {removed_vm['name']}[/green]")
-                log_operation(logger, "VM removed from stand", success=True, vm_name=removed_vm['name'])
-            else:
-                shared.console.print("[red]Недопустимый номер.[/red]")
-        except ValueError:
-            shared.console.print("[red]Введите число.[/red]")
-
-def display_stand_vms(stand: Dict[str, Any]) -> None:
-    """Display current stand VMs in formatted table."""
-    with OperationTimer(logger, "Display stand VMs"):
-        machines = stand.get('machines', [])
-        if not machines:
-            shared.console.print("[yellow]Стенд пуст.[/yellow]")
-            return
-
-        table = Table(title="Виртуальные машины в стенде")
-        table.add_column("№", style="cyan", justify="center")
-        table.add_column("Имя", style="green")
-        table.add_column("Тип", style="magenta")
-        table.add_column("Шаблон", style="blue")
-        table.add_column("Сетевые интерфейсы", style="yellow")
-
-        for i, vm in enumerate(machines, 1):
-            networks_info = []
-            for network in vm.get('networks', []):
-                bridge = network.get('bridge', '')
-                comment = network.get('comment', '')
-                if comment:
-                    networks_info.append(f"{bridge} {comment}")
-                else:
-                    networks_info.append(bridge)
-
-            table.add_row(
-                str(i),
-                vm.get('name', ''),
-                vm.get('device_type', ''),
-                f"{vm.get('template_node', '')}:{vm.get('template_vmid', '')}",
-                ", ".join(networks_info)
-            )
-
-        shared.console.print(table)
-        logger.debug(f"Displayed {len(machines)} VMs in stand")
-
-def save_stand(name: str, stand: Dict[str, Any]) -> None:
-    """Save stand to YAML file with validation."""
-    with OperationTimer(logger, f"Save stand {name}"):
-        if not name.strip():
-            shared.console.print("[red]Имя стенда не может быть пустым.[/red]")
-            return
-
-        if not stand.get('machines'):
-            shared.console.print("[yellow]В стенде нет VM для сохранения.[/yellow]")
-            return
-
-        if _save_stand(name, stand):
-            shared.console.print(f"[green]Стенд '{name}' сохранен ({len(stand['machines'])} VM).[/green]")
-            log_operation(logger, "Stand saved", success=True, stand_name=name, vm_count=len(stand['machines']))
-        else:
-            shared.console.print("[red]Ошибка сохранения стенда.[/red]")
-
-def delete_stand_file() -> Optional[str]:
-    """Delete a stand file with confirmation."""
-    with OperationTimer(logger, "Delete stand file"):
-        stand_files = _get_stand_files()
-
-        if not stand_files:
-            shared.console.print("[yellow]Нет стендов для удаления.[/yellow]")
-            input("Нажмите Enter для продолжения...")
-            return None
-
-        # Display available stands
-        table = Table(title="Удаление стенда")
-        table.add_column("№", style="cyan", justify="center")
-        table.add_column("Имя стенда", style="green")
-        table.add_column("Файл", style="blue")
-
-        for i, (name, file_path) in enumerate(stand_files, 1):
-            table.add_row(str(i), name, Path(file_path).name)
-
-        shared.console.print(table)
-
-        try:
-            choice = int(input("Выберите номер для удаления (0 для отмены): ")) - 1
-            if choice == -1:  # 0 input becomes -1
-                logger.debug("Stand deletion cancelled by user")
-                return None
-            elif 0 <= choice < len(stand_files):
-                name, file_path = stand_files[choice]
-
-                # Confirmation
-                confirm = input(f"Удалить стенд '{name}'? (y/n): ").strip().lower()
-                if confirm != 'y':
-                    logger.debug(f"Deletion cancelled for stand {name}")
-                    return None
-
-                try:
-                    Path(file_path).unlink()
-                    shared.console.print(f"[green]Стенд '{name}' удален.[/green]")
-                    log_operation(logger, "Stand deleted", success=True, stand_name=name)
-                    return name
-                except Exception as e:
-                    shared.console.print(f"[red]Ошибка удаления файла: {e}[/red]")
-                    log_error(logger, e, f"Delete stand file {file_path}")
-                    return None
-            else:
-                shared.console.print("[red]Недопустимый номер.[/red]")
-                return None
-        except ValueError:
-            shared.console.print("[red]Введите число.[/red]")
-            return None
 
 def display_list_of_stands() -> None:
-    """Display list of saved stands with details."""
-    with OperationTimer(logger, "Display list of stands"):
+    """Display list of all stand configurations."""
+    with OperationTimer(logger, "Display stands"):
         stand_files = _get_stand_files()
-
+        
         if not stand_files:
-            shared.console.print("[yellow]Нет сохраненных стендов.[/yellow]")
-            input("Нажмите Enter для продолжения...")
+            print("[!] Нет конфигураций стендов.")
+            input("\nНажмите Enter для продолжения...")
             return
-
-        # Display in table format
-        table = Table(title="Сохраненные стенды")
-        table.add_column("№", style="cyan", justify="center")
-        table.add_column("Имя стенда", style="green")
-        table.add_column("Количество VM", style="magenta", justify="center")
-
-        total_vms = 0
+        
+        print("\nКонфигурации стендов:")
+        print("-" * 60)
+        print(f"{'№':<5} {'Имя':<25} {'Машин':<10} {'Сетей':<10}")
+        print("-" * 60)
+        
         for i, (name, file_path) in enumerate(stand_files, 1):
             try:
-                stand_data = _load_stand(name)
-                vm_count = len(stand_data.get('machines', [])) if stand_data else 0
-                total_vms += vm_count
-                table.add_row(str(i), name, str(vm_count))
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    data = yaml.safe_load(f) or {}
+                machines = data.get('machines', [])
+                networks = set()
+                for m in machines:
+                    for n in m.get('networks', []):
+                        networks.add(n.get('bridge', ''))
+                
+                print(f"{i:<5} {name:<25} {len(machines):<10} {len(networks):<10}")
             except Exception as e:
-                table.add_row(str(i), name, "Ошибка")
-                log_error(logger, e, f"Check stand {name}")
+                print(f"{i:<5} {name:<25} {'Ошибка':<10}")
+        
+        print("-" * 60)
+        input("\nНажмите Enter для продолжения...")
 
-        shared.console.print(table)
-        logger.info(f"Displayed {len(stand_files)} stands with {total_vms} total VMs")
 
-        input("Нажмите Enter для продолжения...")
+def display_stand_vms(stand: Dict[str, Any]) -> None:
+    """Display VMs in a stand configuration."""
+    machines = stand.get('machines', [])
+    
+    if not machines:
+        print("[!] В конфигурации нет машин.")
+        return
+    
+    print("\nМашины в конфигурации:")
+    print("-" * 80)
+    print(f"{'№':<5} {'Имя':<20} {'Template':<12} {'Node':<15} {'Тип':<12} {'Сетей':<8}")
+    print("-" * 80)
+    
+    for i, machine in enumerate(machines, 1):
+        name = machine.get('name', 'N/A')
+        template = machine.get('template_vmid', 'N/A')
+        node = machine.get('template_node', 'N/A')
+        device_type = machine.get('device_type', 'linux')
+        networks = len(machine.get('networks', []))
+        
+        print(f"{i:<5} {name:<20} {str(template):<12} {node:<15} {device_type:<12} {networks:<8}")
+    
+    print("-" * 80)
+    input("\nНажмите Enter для продолжения...")
+
+
+def add_vm_to_stand(stand: Dict[str, Any], conn_name: str = None) -> None:
+    """Add a VM to stand configuration."""
+    with OperationTimer(logger, "Add VM to stand"):
+        try:
+            prox = get_proxmox_connection(conn_name)
+        except Exception as e:
+            print(f"[!] {e}")
+            return
+        
+        # Get available nodes
+        nodes_data = prox.nodes.get()
+        nodes = [n['node'] for n in nodes_data]
+        
+        print("\nДоступные ноды:")
+        for i, node in enumerate(nodes, 1):
+            print(f"  [{i}] {node}")
+        
+        try:
+            node_choice = int(input("Выберите ноду: ")) - 1
+            if not (0 <= node_choice < len(nodes)):
+                print("[!] Неверный выбор.")
+                return
+            selected_node = nodes[node_choice]
+        except ValueError:
+            print("[!] Введите число.")
+            return
+        
+        # Get VMs on selected node
+        vms = prox.nodes(selected_node).qemu.get()
+        templates = [vm for vm in vms if vm.get('template')]
+        
+        if not templates:
+            print("[!] На ноде нет шаблонов.")
+            return
+        
+        print(f"\nШаблоны на ноде {selected_node}:")
+        print("-" * 60)
+        print(f"{'№':<5} {'VMID':<10} {'Имя':<40}")
+        print("-" * 60)
+        
+        for i, vm in enumerate(templates, 1):
+            print(f"{i:<5} {vm['vmid']:<10} {vm.get('name', 'N/A'):<40}")
+        
+        print()
+        
+        try:
+            template_choice = int(input("Выберите шаблон: ")) - 1
+            if not (0 <= template_choice < len(templates)):
+                print("[!] Неверный выбор.")
+                return
+            selected_template = templates[template_choice]
+        except ValueError:
+            print("[!] Введите число.")
+            return
+        
+        vm_name = input("Имя VM (оставьте пустым для имени шаблона): ").strip()
+        if not vm_name:
+            vm_name = selected_template.get('name', 'vm')
+        
+        # Auto-detect device type from template name
+        template_name = selected_template.get('name', '').lower()
+        device_type = 'ecorouter' if template_name.startswith('eco-') else 'linux'
+        print(f"    Тип машины: {device_type}")
+        
+        # Get networks
+        networks = []
+        print("\nДобавление сетей (пустая строка для завершения):")
+        
+        while True:
+            bridge = input("Bridge (например lan или lan.100): ").strip()
+            if not bridge:
+                break
+            networks.append({'bridge': bridge})
+        
+        if not networks:
+            networks = [{'bridge': 'lan'}]
+        
+        # Add machine to stand
+        machine = {
+            'name': vm_name,
+            'template_vmid': selected_template['vmid'],
+            'template_node': selected_node,
+            'networks': networks,
+            'device_type': device_type
+        }
+        
+        stand.setdefault('machines', []).append(machine)
+        print(f"\n[+] Машина '{vm_name}' добавлена в конфигурацию (тип: {device_type})")
+        logger.info(f"Added VM {vm_name} to stand config (type: {device_type})")
+
+
+def remove_vm_from_stand(stand: Dict[str, Any]) -> None:
+    """Remove a VM from stand configuration."""
+    machines = stand.get('machines', [])
+    
+    if not machines:
+        print("[!] В конфигурации нет машин.")
+        return
+    
+    print("\nМашины в конфигурации:")
+    for i, machine in enumerate(machines, 1):
+        print(f"  [{i}] {machine.get('name', 'N/A')}")
+    print(f"  [0] Отмена")
+    
+    try:
+        choice = int(input("Выберите машину для удаления: "))
+        if choice == 0:
+            return
+        if 1 <= choice <= len(machines):
+            removed = machines.pop(choice - 1)
+            print(f"\n[+] Машина '{removed.get('name')}' удалена")
+            logger.info(f"Removed VM {removed.get('name')} from stand config")
+        else:
+            print("[!] Неверный выбор.")
+    except ValueError:
+        print("[!] Введите число.")
+
+
+def save_stand(stand_name: str, stand: Dict[str, Any]) -> bool:
+    """Save stand configuration to file."""
+    file_path = shared.CONFIG_DIR / f"{stand_name}_stand.yaml"
+    
+    try:
+        with open(file_path, 'w', encoding='utf-8') as f:
+            yaml.safe_dump(stand, f, default_flow_style=False, allow_unicode=True)
+        print(f"\n[+] Конфигурация '{stand_name}' сохранена")
+        logger.info(f"Saved stand config: {stand_name}")
+        return True
+    except Exception as e:
+        print(f"[!] Ошибка сохранения: {e}")
+        log_error(logger, e, f"Save stand {stand_name}")
+        return False
+
+
+def load_stand(stand_name: str) -> Optional[Dict[str, Any]]:
+    """Load stand configuration from file."""
+    file_path = shared.CONFIG_DIR / f"{stand_name}_stand.yaml"
+    
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            return yaml.safe_load(f) or {}
+    except FileNotFoundError:
+        logger.warning(f"Stand config {stand_name} not found")
+        return None
+    except Exception as e:
+        log_error(logger, e, f"Load stand {stand_name}")
+        return None
+
+
+def delete_stand_file() -> None:
+    """Delete a stand configuration file."""
+    stand_files = _get_stand_files()
+    
+    if not stand_files:
+        print("[!] Нет конфигураций стендов.")
+        input("\nНажмите Enter для продолжения...")
+        return
+    
+    print("\nУдаление конфигурации стенда:")
+    print("-" * 50)
+    
+    for i, (name, _) in enumerate(stand_files, 1):
+        print(f"  [{i}] {name}")
+    print(f"  [0] Отмена")
+    print()
+    
+    try:
+        choice = int(input("Выберите конфигурацию: "))
+        if choice == 0:
+            return
+        if 1 <= choice <= len(stand_files):
+            name, file_path = stand_files[choice - 1]
+            
+            confirm = input(f"Удалить конфигурацию '{name}'? (y/n): ").strip().lower()
+            if confirm == 'y':
+                Path(file_path).unlink()
+                print(f"\n[+] Конфигурация '{name}' удалена")
+                logger.info(f"Deleted stand config: {name}")
+        else:
+            print("[!] Неверный выбор.")
+    except ValueError:
+        print("[!] Введите число.")
+    
+    input("\nНажмите Enter для продолжения...")
+
+

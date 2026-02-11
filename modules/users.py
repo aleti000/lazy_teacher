@@ -1,237 +1,243 @@
 #!/usr/bin/env python3
 """
 Users module for Lazy Teacher.
-Provides optimized functions for managing user lists.
+Provides functions for managing user lists.
 """
 
 import glob
 import yaml
 from pathlib import Path
-from typing import List, Optional, Dict, Any, Tuple
-import logging
+from typing import List, Optional, Dict, Any
+
 from . import shared
 from .logger import get_logger, log_operation, log_error, OperationTimer
-from rich.table import Table
 
 logger = get_logger(__name__)
 
-def _normalize_user(user: str) -> str:
-    """Normalize user format, ensuring @pve domain."""
-    if '@' not in user:
-        user += '@pve'
-    return user
 
-def _load_user_list(list_name: str) -> Optional[List[str]]:
-    """Load user list from YAML file."""
-    file_path = shared.CONFIG_DIR / f"{list_name}_list.yaml"
+def _get_user_list_files() -> List[tuple]:
+    """Get list of user list files."""
+    pattern = str(shared.CONFIG_DIR / "*_list.yaml")
+    files = glob.glob(pattern)
+    return [(Path(f).stem.replace('_list', ''), f) for f in files]
+
+
+def display_user_lists() -> None:
+    """Display all saved user lists."""
+    with OperationTimer(logger, "Display user lists"):
+        user_lists = _get_user_list_files()
+        
+        if not user_lists:
+            print("[!] Нет сохраненных списков пользователей.")
+            input("\nНажмите Enter для продолжения...")
+            return
+        
+        print("\nСохраненные списки пользователей:")
+        print("-" * 50)
+        print(f"{'№':<5} {'Имя списка':<25} {'Пользователей':<15}")
+        print("-" * 50)
+        
+        for i, (name, file_path) in enumerate(user_lists, 1):
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    data = yaml.safe_load(f) or {}
+                users = data.get('users', [])
+                print(f"{i:<5} {name:<25} {len(users):<15}")
+            except Exception:
+                print(f"{i:<5} {name:<25} {'Ошибка':<15}")
+        
+        print("-" * 50)
+        input("\nНажмите Enter для продолжения...")
+
+
+def input_users_manual() -> Optional[List[str]]:
+    """Input users manually."""
+    with OperationTimer(logger, "Input users manual"):
+        users = []
+        
+        print("\nВвод пользователей (пустая строка для завершения):")
+        print("Формат: user1 или user1@pve")
+        print()
+        
+        while True:
+            user = input("Пользователь: ").strip()
+            if not user:
+                break
+            
+            if '@' not in user:
+                user = f"{user}@pve"
+            
+            users.append(user)
+        
+        if not users:
+            print("[!] Список пуст.")
+            return None
+        
+        print(f"\nВведено {len(users)} пользователей:")
+        for user in users:
+            print(f"  - {user}")
+        
+        save = input("\nСохранить список? (y/n): ").strip().lower()
+        
+        if save == 'y':
+            list_name = input("Имя списка: ").strip()
+            if list_name:
+                save_user_list(list_name, users)
+        
+        return users
+
+
+def import_users() -> Optional[List[str]]:
+    """Import users from a text file."""
+    with OperationTimer(logger, "Import users"):
+        file_path = input("Путь к файлу со списком пользователей: ").strip()
+        
+        if not file_path:
+            print("[!] Путь не указан.")
+            return None
+        
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+            
+            users = []
+            for line in lines:
+                user = line.strip()
+                if user and not user.startswith('#'):
+                    if '@' not in user:
+                        user = f"{user}@pve"
+                    users.append(user)
+            
+            if not users:
+                print("[!] Файл не содержит пользователей.")
+                return None
+            
+            print(f"\nИмпортировано {len(users)} пользователей:")
+            for user in users[:10]:
+                print(f"  - {user}")
+            if len(users) > 10:
+                print(f"  ... и еще {len(users) - 10}")
+            
+            save = input("\nСохранить список? (y/n): ").strip().lower()
+            
+            if save == 'y':
+                list_name = input("Имя списка: ").strip()
+                if list_name:
+                    save_user_list(list_name, users)
+            
+            return users
+            
+        except FileNotFoundError:
+            print(f"[!] Файл не найден: {file_path}")
+            return None
+        except Exception as e:
+            print(f"[!] Ошибка чтения файла: {e}")
+            log_error(logger, e, "Import users")
+            return None
+
+
+def save_user_list(name: str, users: List[str]) -> bool:
+    """Save user list to file."""
+    file_path = shared.CONFIG_DIR / f"{name}_list.yaml"
+    
+    try:
+        data = {'users': users}
+        with open(file_path, 'w', encoding='utf-8') as f:
+            yaml.safe_dump(data, f, default_flow_style=False, allow_unicode=True)
+        print(f"\n[+] Список '{name}' сохранен ({len(users)} пользователей)")
+        logger.info(f"Saved user list: {name} ({len(users)} users)")
+        return True
+    except Exception as e:
+        print(f"[!] Ошибка сохранения: {e}")
+        log_error(logger, e, f"Save user list {name}")
+        return False
+
+
+def load_user_list(name: str) -> Optional[List[str]]:
+    """Load user list from file."""
+    file_path = shared.CONFIG_DIR / f"{name}_list.yaml"
+    
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             data = yaml.safe_load(f) or {}
-        users = data.get('users', [])
-        logger.debug(f"Loaded {len(users)} users from {list_name}")
-        return users if isinstance(users, list) else []
+        return data.get('users', [])
     except FileNotFoundError:
-        logger.debug(f"User list {list_name} not found")
+        logger.warning(f"User list {name} not found")
         return None
     except Exception as e:
-        log_error(logger, e, f"Load user list {list_name}")
+        log_error(logger, e, f"Load user list {name}")
         return None
 
-def _save_user_list(list_name: str, users: List[str]) -> bool:
-    """Save user list to YAML file."""
-    file_path = shared.CONFIG_DIR / f"{list_name}_list.yaml"
+
+def delete_user_list() -> None:
+    """Delete a user list file."""
+    user_lists = _get_user_list_files()
+    
+    if not user_lists:
+        print("[!] Нет сохраненных списков пользователей.")
+        input("\nНажмите Enter для продолжения...")
+        return
+    
+    print("\nУдаление списка пользователей:")
+    print("-" * 50)
+    
+    for i, (name, _) in enumerate(user_lists, 1):
+        print(f"  [{i}] {name}")
+    print(f"  [0] Отмена")
+    print()
+    
     try:
-        with open(file_path, 'w', encoding='utf-8') as f:
-            yaml.safe_dump({'users': users}, f, default_flow_style=False)
-        logger.debug(f"Saved {len(users)} users to {list_name}")
-        return True
-    except Exception as e:
-        log_error(logger, e, f"Save user list {list_name}")
-        return False
-
-def _get_user_lists() -> List[Tuple[str, str]]:
-    """Get list of available user lists with their file paths."""
-    pattern = str(shared.CONFIG_DIR / "*_list.yaml")
-    files = glob.glob(pattern)
-    return [(Path(file).stem.replace('_list', ''), file) for file in files]
-
-def input_users_manual() -> Optional[str]:
-    """Manually input list of users with validation."""
-    with OperationTimer(logger, "Manual user input"):
-        list_name = input("Введите имя списка пользователей: ").strip()
-        if not list_name:
-            logger.debug("Manual input cancelled - no list name")
-            return None
-
-        # Check if list already exists
-        if _load_user_list(list_name) is not None:
-            shared.console.print(f"[yellow]Список '{list_name}' уже существует и будет перезаписан.[/yellow]")
-
-        users = []
-        shared.console.print("Введите пользователей (оставьте пустым для завершения):")
-
-        while True:
-            user_input = input("Пользователь: ").strip()
-            if not user_input:
-                break
-
-            normalized_user = _normalize_user(user_input)
-            users.append(normalized_user)
-            logger.debug(f"Added user: {normalized_user}")
-
-        if not users:
-            shared.console.print("[yellow]Список пустой.[/yellow]")
-            logger.info("No users entered - cancelled")
-            return None
-
-        if _save_user_list(list_name, users):
-            shared.console.print(f"[green]Список пользователя '{list_name}' сохранен ({len(users)} пользователей).[/green]")
-            log_operation(logger, "Created user list", success=True, list_name=list_name, user_count=len(users))
-            return list_name
-        else:
-            shared.console.print("[red]Ошибка сохранения списка.[/red]")
-            return None
-
-def import_users() -> Optional[str]:
-    """Import users from external file with validation."""
-    with OperationTimer(logger, "Import users"):
-        file_path = input("Введите путь к файлу списка пользователей: ").strip()
-        if not file_path.strip():
-            shared.console.print("[red]Путь не указан.[/red]")
-            return None
-
-        list_name = input("Введите имя нового списка: ").strip()
-        if not list_name:
-            logger.debug("Import cancelled - no list name")
-            return None
-
-        # Check if list already exists
-        if _load_user_list(list_name) is not None:
-            response = input(f"Список '{list_name}' уже существует. Перезаписать? (y/n): ").strip().lower()
-            if response != 'y':
-                logger.debug(f"Import cancelled - list {list_name} already exists")
-                return None
-
-        try:
-            source_path = Path(file_path)
-            if not source_path.exists():
-                shared.console.print(f"[red]Файл '{file_path}' не найден.[/red]")
-                return None
-
-            with open(source_path, 'r', encoding='utf-8') as f:
-                lines = f.readlines()
-
-            users = []
-            for line_num, line in enumerate(lines, 1):
-                user_raw = line.strip()
-                if user_raw:
-                    normalized_user = _normalize_user(user_raw)
-                    users.append(normalized_user)
-                    logger.debug(f"Imported user {line_num}: {normalized_user}")
-
-            if not users:
-                shared.console.print("[yellow]Файл не содержит допустимых пользователей.[/yellow]")
-                return None
-
-            if _save_user_list(list_name, users):
-                shared.console.print(f"[green]Импорт завершен: '{list_name}' ({len(users)} пользователей из {source_path}).[/green]")
-                log_operation(logger, "Imported user list", success=True, list_name=list_name, source_file=str(source_path), user_count=len(users))
-                return list_name
-            else:
-                shared.console.print("[red]Ошибка сохранения импортированного списка.[/red]")
-                return None
-
-        except Exception as e:
-            shared.console.print(f"[red]Ошибка импорта: {e}[/red]")
-            log_error(logger, e, f"Import from {file_path}")
-            return None
-
-def display_user_lists() -> None:
-    """Display all user lists in formatted tables."""
-    with OperationTimer(logger, "Display user lists"):
-        user_lists = _get_user_lists()
-
-        if not user_lists:
-            shared.console.print("[yellow]Нет списков пользователей.[/yellow]")
-            input("Нажмите Enter для продолжения...")
+        choice = int(input("Выберите список: "))
+        if choice == 0:
             return
+        if 1 <= choice <= len(user_lists):
+            name, file_path = user_lists[choice - 1]
+            
+            confirm = input(f"Удалить список '{name}'? (y/n): ").strip().lower()
+            if confirm == 'y':
+                Path(file_path).unlink()
+                print(f"\n[+] Список '{name}' удален")
+                logger.info(f"Deleted user list: {name}")
+        else:
+            print("[!] Неверный выбор.")
+    except ValueError:
+        print("[!] Введите число.")
+    
+    input("\nНажмите Enter для продолжения...")
 
-        logger.info(f"Displaying {len(user_lists)} user lists")
 
-        for list_name, file_path in user_lists:
-            shared.console.print(f"[bold blue]Список: {list_name}[/bold blue]")
-
-            try:
-                users = _load_user_list(list_name)
-                if users:
-                    table = Table(title="Пользователи", box=None)
-                    table.add_column("№", style="magenta", justify="center")
-                    table.add_column("Пользователь", style="cyan")
-                    for idx, user in enumerate(users, 1):
-                        table.add_row(str(idx), user)
-                    shared.console.print(table)
-                else:
-                    shared.console.print("[dim]  Список пуст.[/dim]")
-            except Exception as e:
-                shared.console.print(f"[red]  Ошибка чтения: {e}[/red]")
-                log_error(logger, e, f"Display user list {list_name}")
-
-        input("Нажмите Enter для продолжения...")
-
-def delete_user_list() -> Optional[str]:
-    """Delete a user list with confirmation."""
-    with OperationTimer(logger, "Delete user list"):
-        user_lists = _get_user_lists()
-
-        if not user_lists:
-            shared.console.print("[yellow]Нет списков для удаления.[/yellow]")
-            return None
-
-        # Display available lists
-        table = Table(title="Удаление списка пользователей", box=None)
-        table.add_column("№", style="magenta", justify="center")
-        table.add_column("Имя списка", style="cyan")
-        table.add_column("Количество пользователей", style="green", justify="center")
-
-        list_data = []
-        for name, file_path in user_lists:
-            try:
-                users = _load_user_list(name) or []
-                list_data.append((name, file_path, len(users)))
-                table.add_row(str(len(list_data)), name, str(len(users)))
-            except Exception as e:
-                list_data.append((name, file_path, 0))
-                table.add_row(str(len(list_data)), name, "Ошибка")
-                log_error(logger, e, f"Check user list {name}")
-
-        shared.console.print(table)
-
+def select_user_list() -> Optional[List[str]]:
+    """Select a user list interactively."""
+    user_lists = _get_user_list_files()
+    
+    if not user_lists:
+        print("[!] Нет сохраненных списков пользователей.")
+        return None
+    
+    print("\nВыберите список пользователей:")
+    print("-" * 50)
+    
+    for i, (name, file_path) in enumerate(user_lists, 1):
         try:
-            choice = int(input("Выберите номер для удаления (0 для отмены): ")) - 1
-            if choice == -1:  # 0 input becomes -1 after -1
-                logger.debug("Delete cancelled by user")
-                return None
-            elif 0 <= choice < len(list_data):
-                name, file_path, user_count = list_data[choice]
-
-                # Confirmation
-                confirm = input(f"Удалить список '{name}' с {user_count} пользователями? (y/n): ").strip().lower()
-                if confirm != 'y':
-                    logger.debug(f"Delete cancelled for list {name}")
-                    return None
-
-                try:
-                    Path(file_path).unlink()
-                    shared.console.print(f"[green]Список '{name}' удален.[/green]")
-                    log_operation(logger, "Deleted user list", success=True, list_name=name, user_count=user_count)
-                    return name
-                except Exception as e:
-                    shared.console.print(f"[red]Ошибка удаления файла: {e}[/red]")
-                    log_error(logger, e, f"Delete user list file {file_path}")
-                    return None
-            else:
-                shared.console.print("[red]Недопустимый номер.[/red]")
-                return None
-        except ValueError:
-            shared.console.print("[red]Введите число.[/red]")
+            with open(file_path, 'r', encoding='utf-8') as f:
+                data = yaml.safe_load(f) or {}
+            users_count = len(data.get('users', []))
+            print(f"  [{i}] {name} ({users_count} польз.)")
+        except Exception:
+            print(f"  [{i}] {name} (ошибка)")
+    
+    print(f"  [0] Отмена")
+    print()
+    
+    try:
+        choice = int(input("Выбор: "))
+        if choice == 0:
             return None
+        if 1 <= choice <= len(user_lists):
+            name, _ = user_lists[choice - 1]
+            return load_user_list(name)
+        print("[!] Неверный выбор.")
+        return None
+    except ValueError:
+        print("[!] Введите число.")
+        return None
