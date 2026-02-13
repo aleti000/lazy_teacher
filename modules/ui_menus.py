@@ -207,7 +207,8 @@ def main_menu():
         '1': 'Создать стенды',
         '2': 'Управление стендами',
         '3': 'Управление конфигурациями',
-        '4': 'Помощь',
+        '4': 'Дополнительные функции',
+        '5': 'Помощь',
         '0': 'Выход'
     }
     
@@ -230,6 +231,8 @@ def main_menu():
         elif choice == '3':
             config_menu()
         elif choice == '4':
+            extra_functions_menu()
+        elif choice == '5':
             show_help("main")
 
 
@@ -901,3 +904,37 @@ def deploy_stand_menu():
 def delete_stand_menu():
     """Legacy delete stand menu."""
     manage_stands_menu()
+
+
+def extra_functions_menu():
+    """Menu for additional functions."""
+    from .deletion import delete_all_user_stands
+    from .connections import get_proxmox_connection
+
+    options = {
+        '1': 'Удалить стенды по списку пользователей',
+        '2': 'Удалить стенд пользователя вручную',
+        '0': 'Назад'
+    }
+
+    while True:
+        clear_screen()
+        print_header("ДОПОЛНИТЕЛЬНЫЕ ФУНКЦИИ")
+        print_menu(options)
+
+        choice = get_choice()
+
+        if choice == '0':
+            return
+        elif choice == '1':
+            print("\n[+] Запуск удаления стендов по списку пользователей...")
+            delete_all_user_stands()
+            input("\nНажмите Enter для продолжения...")
+        elif choice == '2':
+            username = input("Введите имя пользователя (например user1@pve): ").strip()
+            if username:
+                prox = get_proxmox_connection()
+                _delete_user_stand(prox, username)
+                input("\nНажмите Enter для продолжения...")
+        else:
+            print("[!] Неверный выбор")
