@@ -1,86 +1,81 @@
-import yaml
-import yaml
+#!/usr/bin/env python3
+"""
+Deploy Stand Distributed module for Lazy Teacher.
+Deploys stands with even distribution across cluster nodes.
+Uses centralized templates.yaml registry for template management.
+"""
+
 import yaml
 from pathlib import Path
+from typing import Dict, List, Optional, Any
+
 from . import shared
 from .connections import get_proxmox_connection
-from .sync_templates import sync_templates as sync_templates_func
-from .tasks import wait_for_clone_task as wait_clone_func
+from .sync_templates import sync_templates
+from .logger import get_logger, log_operation, log_error, OperationTimer
 
-from .ui_menus import select_stand_config, select_user_list, select_clone_type
-from modules import *
+logger = get_logger(__name__)
 
-# Make shared constants available
-CONFIG_DIR = shared.CONFIG_DIR
-DEFAULT_CONN = shared.DEFAULT_CONN
-console = shared.console
-logger = shared.logger
-def deploy_stand_distributed(stand_config=None, users_list=None, clone_type=None, return_results=False):
+
+def deploy_stand_distributed(stand_config: Dict = None, users_list: List[str] = None, 
+                             clone_type: int = None, return_results: bool = False) -> Optional[List[Dict]]:
     """Deploy stand with even distribution of users across nodes."""
-    import glob
-    import random
-    import string
+    from .ui_menus import select_stand_config, select_user_list, select_clone_type
+    from .deploy_stand_local import deploy_stand_local
 
-    # If parameters provided from demo_exam, use them; otherwise select interactively
     if stand_config is None:
         result = select_stand_config()
         if result is None:
+            print("[!] Не выбран стенд.")
             input("Нажмите Enter для продолжения...")
-            return None if return_results else None
+            return None
         stand, stand_file_path = result
     else:
         stand = stand_config
-        stand_file_path = None  # Won't save if externally provided
+        stand_file_path = None
 
     if users_list is None:
         users = select_user_list()
         if not users:
+            print("[!] Не выбран список пользователей.")
             input("Нажмите Enter для продолжения...")
-            return None if return_results else None
+            return None
     else:
         users = users_list
 
     if clone_type is None:
+        from .ui_menus import select_clone_type
         clone_type = select_clone_type()
 
-    # Get Proxmox connection
     try:
         prox = get_proxmox_connection()
     except Exception as e:
-        shared.console.print(f"[red]{e}[/red]")
+        print(f"[!] {e}")
         input("Нажмите Enter для продолжения...")
-        return
+        return None
 
-    # Get nodes
     nodes_data = prox.nodes.get()
     nodes = [n['node'] for n in nodes_data]
+    
     if len(nodes) < 2:
-        console.print(f"[red]Не хватает нод для распределения. Доступно: {len(nodes)}[/red]")
+        print(f"[!] Кластер содержит только {len(nodes)} ноду. Используйте локальное развертывание.")
         input("Нажмите Enter для продолжения...")
-        return
+        return None
 
-    console.print(f"[blue]Начинаем синхронизацию шаблонов для {len(nodes)} нод...[/blue]")
+    print(f"\n[*] Кластер содержит {len(nodes)} нод: {', '.join(nodes)}")
+    print(f"[*] Начинаем синхронизацию шаблонов...")
+    
     # Sync templates to all nodes
-    updated = sync_templates_func(prox, stand, nodes)
-    if updated:
-        # Save updated stand with replicas
-        try:
-            with open(stand_file_path, 'w', encoding='utf-8') as f:
-                yaml.safe_dump(stand, f, default_flow_style=False)
-            console.print("[green]Стенд обновлен с информацией о репликах шаблонов.[/green]")
-        except Exception as e:
-            logger.error(f"Ошибка сохранения обновленного стенда: {e}")
-            console.print(f"[red]Не удалось сохранить обновленный стенд: {e}[/red]")
+    sync_templates(prox, stand, nodes)
 
-    # Now deploy for each user on assigned node
+    # Deploy for each user on assigned node
     all_deployment_results = []
+    
     for user_index, user in enumerate(users):
         target_node = nodes[user_index % len(nodes)]
-        console.print(f"[cyan]Развертывание для пользователя {user} на ноде {target_node}[/cyan]")
+        print(f"\n[*] Развертывание для пользователя {user} на ноде {target_node}")
 
-        # Deploy stand for this user on target_node and collect results
-        from .deploy_stand_local import deploy_stand_local as deploy_local_func
-        user_results = deploy_local_func(
+        user_results = deploy_stand_local(
             stand_config=stand,
             users_list=[user],
             target_node=target_node,
@@ -89,22 +84,20 @@ def deploy_stand_distributed(stand_config=None, users_list=None, clone_type=None
         )
         all_deployment_results.extend(user_results)
 
-    console.print("[green]Распределенное развертывание завершено![/green]")
+    print("\n[+] Распределенное развертывание завершено!")
 
-    console.print("\n[bold green]Общие результаты развертывания:[/bold green]")
-    if all_deployment_results:
-        from rich.table import Table
-        table = Table(title="Распределение пользователей по нодам", show_header=True, header_style="bold magenta")
-        table.add_column("Пользователь", style="cyan", justify="center", no_wrap=True)
-        table.add_column("Пароль", style="green", justify="center", no_wrap=True)
-        table.add_column("Нода", style="yellow", justify="center", no_wrap=True)
-        for result in all_deployment_results:
-            table.add_row(result['user'], result['password'], result['node'])
-        console.print(table)
-    else:
-        console.print("[red]Нет результатов развертывания.[/red]")
+    # Show results
+    if not return_results:
+        print("\n" + "=" * 50)
+        print("  РЕЗУЛЬТАТЫ РАСПРЕДЕЛЕННОГО РАЗВЕРТЫВАНИЯ")
+        print("=" * 50)
+        if all_deployment_results:
+            print(f"\n{'Пользователь':<20} {'Пароль':<12} {'Нода':<15}")
+            print("-" * 47)
+            for result in all_deployment_results:
+                print(f"{result['user']:<20} {result['password']:<12} {result['node']:<15}")
+        else:
+            print("\n[!] Нет результатов развертывания.")
+        input("\nНажмите Enter для продолжения...")
 
-    if return_results:
-        return all_deployment_results
-    else:
-        input("Нажмите Enter для продолжения...")
+    return all_deployment_results
