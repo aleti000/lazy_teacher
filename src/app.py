@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
-"""
-lazy-teacher v2.0.2 - Entry point
-"""
+"""lazy-teacher v2.0.2 - Entry point"""
 import sys
 import os
 
-# Добавляем корень проекта (/root/lazy_teacher) в sys.path
-# Это позволяет Python корректно находить пакет 'app'
+# Гарантируем, что корень проекта (/root/lazy_teacher) в sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from app import create_app
