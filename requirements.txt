@@ -1,7 +1,0 @@
-# Core dependencies for Lazy Teacher Proxmox management system
-
-# Proxmox API client
-proxmoxer>=2.0.0
-
-# YAML configuration file support
-PyYAML>=6.0
