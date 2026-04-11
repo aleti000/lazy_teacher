@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
-"""lazy-teacher v2.0.2 - Entry point"""
-import sys
-import os
-
-# Гарантируем, что корень проекта (/root/lazy_teacher) в sys.path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
+"""
+lazy-teacher v2.0.2 - Entry point
+"""
 from app import create_app
 from app.models.setting import db, Setting
 
@@ -19,14 +15,20 @@ def index():
 def db_test():
     try:
         test_key = 'v2.0.2_ping'
+        # Проверяем, есть ли запись, если нет - создаём
         setting = Setting.query.filter_by(setting_key=test_key).first()
         if not setting:
-            setting = Setting(setting_key=test_key, setting_value='ok', description='Проверка подключения к БД')
+            setting = Setting(
+                setting_key=test_key,
+                setting_value='ok',
+                description='Проверка подключения к БД'
+            )
             db.session.add(setting)
         else:
             setting.setting_value = 'ok'
         db.session.commit()
 
+        # Читаем обратно
         record = Setting.query.filter_by(setting_key=test_key).first()
         return {
             "status": "success",
@@ -38,4 +40,5 @@ def db_test():
         return {"status": "error", "message": str(e)}, 500
 
 if __name__ == '__main__':
+    # Для разработки: хост 0.0.0.0, порт 5000
     app.run(host='0.0.0.0', port=5000, debug=True)

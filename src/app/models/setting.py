@@ -1,7 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
-# Экспортируем объект db, чтобы избежать циклических импортов
 db = SQLAlchemy()
 
 class Setting(db.Model):

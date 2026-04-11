@@ -1,7 +1,7 @@
 import os
 
 class Config:
-    # Формат: mysql+pymysql://user:password@host/database
+    # Используем localhost для подключения через Unix-сокет (надежнее чем 127.0.0.1)
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DATABASE_URL',
         'mysql+pymysql://lt_user:LazyPass2024!@localhost/lazy_teacher_db'
