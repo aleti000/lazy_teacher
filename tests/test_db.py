@@ -4,7 +4,7 @@ import pymysql
 import os
 
 DB_CONF = {
-    'host': '127.0.0.1',
+    'host': 'localhost',
     'user': 'lt_user',
     'password': os.environ.get('DB_PASS', 'LazyPass2024!'),
     'database': 'lazy_teacher_db',
